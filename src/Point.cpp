@@ -10,10 +10,9 @@
 
 namespace patterns {
 
-///const int Point::TOTAL_POINTS = 27;
+const int Point::TOTAL_POINTS = 27;
 const int Point::CoordinatesToPointConversionMatrix [3] = {1,3,9};
-const int Point::PointToCoordinatesConversionMatrix [TOTAL_POINTS][3] = 
-{
+const int Point::PointToCoordinatesConversionMatrix [TOTAL_POINTS][3] = {
     {0,0,0}, //0
     {1,0,0}, //1
     {2,0,0}, //2
@@ -43,8 +42,7 @@ const int Point::PointToCoordinatesConversionMatrix [TOTAL_POINTS][3] =
     {2,2,2}  //26
 };
 
-const int Point::RotationMatrix_X [4][4][4] =
-{
+const int Point::RotationMatrix_X [4][4][4] = {
     { /// 0 degree rotation
         { 1, 0, 0, 0},
         { 0, 1, 0, 0},
@@ -127,27 +125,33 @@ const int Point::RotationMatrix_Z [4][4][4] =
     }
 };
 
+Point::Point(int id, int x, int y, int z)
+    : m_id(id), m_X(x), m_Y(y), m_Z(z), m_T(1) { 
+    m_point = this->CoordinatesToPoint(); 
+}
+
+Point::Point(int x, int y, int z): m_X(x), m_Y(y), m_Z(z), m_T(1) { 
+    m_point = this->CoordinatesToPoint(); 
+    m_id    = m_point;
+}
 
 
-int Point::CoordinatesToPoint()
-{
+
+int Point::CoordinatesToPoint() {
     return (m_X*CoordinatesToPointConversionMatrix[0] +
             m_Y*CoordinatesToPointConversionMatrix[1] +
             m_Z*CoordinatesToPointConversionMatrix[2]);
 }
 
-void Point::PointToCoordinates(int point)
-{
-    if ( (point >= 0) && (point <TOTAL_POINTS) )
-    {
+void Point::PointToCoordinates(int point) {
+    if ( (point >= 0) && (point <TOTAL_POINTS) ) {
         m_X = PointToCoordinatesConversionMatrix[point][0];
         m_Y = PointToCoordinatesConversionMatrix[point][1];
         m_Z = PointToCoordinatesConversionMatrix[point][2];
         m_point = point;
         m_id = m_point;
     }
-    else
-    {
+    else {
         m_X=0;
         m_Y=0;
         m_Z=0;
@@ -156,11 +160,9 @@ void Point::PointToCoordinates(int point)
     }
 }
 
-int Point::rotX(int input_step)
-{
-
+int Point::rotX(int input_step) {
     int step = this->getSteps(input_step);
- 
+
     const int (*rot)[4]=RotationMatrix_X[step];
 
     int temp[4] = {0, 0, 0, 0};
@@ -177,8 +179,7 @@ int Point::rotX(int input_step)
     return (m_point);
 }
 
-int Point::rotate(int axis, int number_steps)
-{
+int Point::rotate(int axis, int number_steps) {
     /// Do nothing just return current position
     if ( (axis > -1) && (axis < 4) )
     {
@@ -190,13 +191,13 @@ int Point::rotate(int axis, int number_steps)
             rot=RotationMatrix_Y[step];
         else if (axis == 2)
             rot=RotationMatrix_Z[step];
-    
+
         int temp[4] = {0, 0, 0, 0};
-    
+
         for (int i=0; i<4; i++)
         {
             temp[i] = rot[i][0]*m_X + rot[i][1]*m_Y + rot[i][2]*m_Z + rot[i][3]*m_T;
-//std::cout << "point=" << temp[i] << " [" << rot[i][0]  << " " << rot[i][1] << " " << rot[i][2] << " " << rot[i][3] << "] * [" << m_X << " " << m_Y << " " << m_Z << " " << m_T <<"]" << std::endl ; 
+            //std::cout << "point=" << temp[i] << " [" << rot[i][0]  << " " << rot[i][1] << " " << rot[i][2] << " " << rot[i][3] << "] * [" << m_X << " " << m_Y << " " << m_Z << " " << m_T <<"]" << std::endl ; 
         }
 
         m_X = temp[0];
@@ -209,23 +210,20 @@ int Point::rotate(int axis, int number_steps)
 }
 
 
-void Point::setPosition(int _x, int _y, int _z)
-{
+void Point::setPosition(int _x, int _y, int _z) {
     m_X = _x;
     m_Y = _y;
     m_Z = _z;
     m_point = this->CoordinatesToPoint();
 }
 
-void Point::setPosition(int point)
-{
+void Point::setPosition(int point) {
     this->PointToCoordinates(point);
     m_point = this->CoordinatesToPoint();
 }
 
 
-int Point::getSteps(int rotation)
-{
+int Point::getSteps(int rotation) {
     if (rotation < 0)
     {
         int step = (int)fabs(rotation) % 4;
@@ -236,20 +234,17 @@ int Point::getSteps(int rotation)
 
         return step;
     }
-
     return (rotation % 4);
-
 }
 
-int Point::coordinatesToID(int x, int y, int z)
-{
+int Point::coordinatesToID(int x, int y, int z) {
     for (int i=0; i< TOTAL_POINTS; i++)
     {
         if ( (PointToCoordinatesConversionMatrix[i][0] == x) && 
-             (PointToCoordinatesConversionMatrix[i][1] == y) && 
-             (PointToCoordinatesConversionMatrix[i][2] == z) )
+                (PointToCoordinatesConversionMatrix[i][1] == y) && 
+                (PointToCoordinatesConversionMatrix[i][2] == z) )
         {
-           return i;
+            return i;
         }
     }
     return 0;

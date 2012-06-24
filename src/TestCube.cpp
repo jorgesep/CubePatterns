@@ -27,7 +27,7 @@ int main (int argc, char *argv[])
 
     vector<int> edges;
     edges.push_back(9);
-    edges.push_back(11);
+    //edges.push_back(11);
 
     Cube pattern = Cube(edges);
     pattern.getInitPoints(init);
@@ -52,6 +52,8 @@ int main (int argc, char *argv[])
     Iter2 = _180deg.begin() ;
     Iter3 = _270deg.begin() ;
 
+
+    cout << "X" << endl;
     for (vector<int>::const_iterator it  = init.begin();
                                it != init.end();
                              ++it)
@@ -81,6 +83,8 @@ int main (int argc, char *argv[])
     Iter2 = _180deg.begin() ;
     Iter3 = _270deg.begin() ;
 
+
+    cout << "Y" << endl;
     for (vector<int>::const_iterator it  = init.begin();
                                it != init.end();
                              ++it)
@@ -110,6 +114,7 @@ int main (int argc, char *argv[])
     Iter2 = _180deg.begin() ;
     Iter3 = _270deg.begin() ;
 
+    cout << "Z" << endl;
     for (vector<int>::const_iterator it  = init.begin();
                                it != init.end();
                              ++it)

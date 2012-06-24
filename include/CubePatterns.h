@@ -10,10 +10,11 @@
 #include <map>
 #include <bitset>
 #include "Cube.h"
+#include "PatternFactory.h"
 
 
-#ifndef PATTERNSDEFAULT_H_
-#define PATTERNSDEFAULT_H_
+#ifndef CUBEPATTERNS_H_
+#define CUBEPATTERNS_H_
 
 using namespace std;
 
@@ -219,14 +220,14 @@ private:
     typedef map<int, CubeMapping_t> PatternMap_t;
     typedef PatternMap_t::const_iterator MapIter;
 
-    static const unsigned int TETRA_POINTS;
-    static const unsigned int PYRAMID_POINTS;
-    static const unsigned int PRISM_POINTS;
-    static const unsigned int CORNER_POINTS;
-    static const unsigned int EDGE_POINTS;
-    static const unsigned int FACE_POINTS;
-    static const unsigned int TOTAL_POINTS;
-    static const unsigned int PERMUTATIONS;
+    //static const unsigned int TETRA_POINTS;
+    //static const unsigned int PYRAMID_POINTS;
+    //static const unsigned int PRISM_POINTS;
+    //static const unsigned int CORNER_POINTS;
+    //static const unsigned int EDGE_POINTS;
+    //static const unsigned int FACE_POINTS;
+    //static const unsigned int TOTAL_POINTS;
+    //static const unsigned int PERMUTATIONS;
 
     Cube m_cube;
 
@@ -254,16 +255,16 @@ private:
 
     static const int InternalPoints[];
 
-};
-
-
-
-class RotationCube
-{
-
+    /**
+     * Mask is the result to left shift number 1 by the value of the edge point.
+     * Final outcome is a logical OR combination of all edge points in the pattern.
+     */ 
+    static const Uint PatternMask[23];
 
 };
+
+
 
 }
 
-#endif /* PATTERNSDEFAULT_H_ */
+#endif /* CUBEPATTERNS_H_ */

@@ -29,34 +29,25 @@ public:
      * Parametric constructor
      * Initializes x,y,z vertex position, calculates vertex number.
      */
-    Point(int id, int x, int y, int z): m_id(id), m_X(x), m_Y(y), m_Z(z), m_T(1) 
-    { 
-        m_point = this->CoordinatesToPoint(); 
-    };
+    Point(int , int , int , int );
 
     /** 
      * Parametric constructor
      * Initializes x,y,z vertex position, calculates vertex number.
      */
-    Point(int x, int y, int z): m_X(x), m_Y(y), m_Z(z), m_T(1) 
-    { 
-        m_point = this->CoordinatesToPoint(); 
-        m_id    = m_point;
-    };
-
+    Point(int , int , int );
     /**
      * Initializes point vertex number, determines x,y,z position
      */
     Point(int p): m_T(1) { this->PointToCoordinates(p); };
-    
+
     virtual ~Point() {};
-    
+
     /// Copy constructor
     Point(const Point & point) { *this = point; };
-    
+
     /// Assignment operator
-    Point &operator =(const Point &point)
-    {
+    Point &operator =(const Point &point) {
         if (*this != point)
         {
             m_id= point.m_id;
@@ -68,10 +59,9 @@ public:
         }
         return *this;
     };
-    
+
     /// Equals operator
-    bool operator ==(const Point &point) const
-    {
+    bool operator ==(const Point &point) const {
         return ((m_id == point.m_id) &&
                 (m_X == point.m_X) &&
                 (m_Y == point.m_Y) &&
@@ -79,10 +69,9 @@ public:
                 (m_T == point.m_T) &&
                 (m_point == point.m_point));
     };
-    
+
     /// Not Equals operator
-    bool operator !=(const Point &point) const
-    {
+    bool operator !=(const Point &point) const {
         return ((m_id    != point.m_id) ||
                 (m_X     != point.m_X ) ||
                 (m_Y     != point.m_Y ) ||
@@ -90,47 +79,42 @@ public:
                 (m_T     != point.m_T ) ||
                 (m_point != point.m_point));
     };
-    
+
     /// X rotate operator
-    Point &operator >>(const int step)
-    {
+    Point &operator >>(const int step) {
         this->rotX(step);
         return *this;
     };
 
     /// Z rotate operator
-    Point &operator <<(const int step)
-    {
+    Point &operator <<(const int step) {
         this->rotZ(step);
         return *this;
     };
 
     /// Y rotate operator
-    Point &operator ^(const int step)
-    {
+    Point &operator ^(const int step) {
         this->rotY(step);
         return *this;
     };
 
 
-    Point &operator +(const Point &point)
-    {
+    Point &operator +(const Point &point) {
         m_X += point.m_X;
         m_Y += point.m_Y;
         m_Z += point.m_Z;
         m_point = this->CoordinatesToPoint();
         return *this;
     };
-    
-    Point &operator -(const Point &point)
-    {
+
+    Point &operator -(const Point &point) {
         m_X -= point.m_X;
         m_Y -= point.m_Y;
         m_Z -= point.m_Z;
         m_point = this->CoordinatesToPoint();
         return *this;
     };
-    
+
     /**
      * Rotates set new vertex position.
      * @param x position
@@ -192,16 +176,16 @@ private:
     int m_T;
     int m_point;
 
-    static const int TOTAL_POINTS=27;
+    static const int TOTAL_POINTS;
     /**
      * Matrix to determine vertex number
      */ 
-    static const int CoordinatesToPointConversionMatrix [3];
+    static const int CoordinatesToPointConversionMatrix [];
 
     /**
      * Matrix to return x,y,z according vertex number.
      */
-    static const int PointToCoordinatesConversionMatrix [TOTAL_POINTS][3];
+    static const int PointToCoordinatesConversionMatrix [][3];
 
     /**
      *

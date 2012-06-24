@@ -18,34 +18,32 @@ using namespace std;
 namespace patterns {
 
 /**
-* Creates a basic cube
-*
-*       6--------7--------8
-*      /|                /|
-*     / |               / |
-*   15  |     16       17 |
-*   /   3        4    /   5
-* 24----+--25--------26   |
-*  | 12 |        13  |  14|
-*  |    0--------1---|----2
-*  |   /             |   /
-*  |  9        10    |  11
-* 21 /       22      23/
-*  |/                |/
-* 18--------19-------20
-*
-*/
+ * Creates a basic cube
+ *
+ *       6--------7--------8
+ *      /|                /|
+ *     / |               / |
+ *   15  |     16       17 |
+ *   /   3        4    /   5
+ * 24----+--25--------26   |
+ *  | 12 |        13  |  14|
+ *  |    0--------1---|----2
+ *  |   /             |   /
+ *  |  9        10    |  11
+ * 21 /       22      23/
+ *  |/                |/
+ * 18--------19-------20
+ *
+ */
 class Cube {
 public:
-    
-
     /**
      * Default constructor.
      */
-    Cube() { this->initCornerPointVectors(); };
+    Cube();
 
     virtual ~Cube() { };
-    
+
     /**
      * Creates a cube assigning edge and mid points.
      */
@@ -68,16 +66,23 @@ public:
     /**
      * Equals operator
      */ 
-    bool operator ==(const Cube &c) const
-    {
+    bool operator ==(const Cube &c) const {
         return ( (m_MapVertices == c.m_MapVertices) || (m_Edges==c.m_Edges) );
     };
- 
-    bool operator !=(const Cube &c) const
-    {
+
+    bool operator !=(const Cube &c) const {
         return ( (m_MapVertices != c.m_MapVertices) || (m_Edges!=c.m_Edges) );
     };
-   
+
+    //friend ostream &operator <<(ostream& os, const Cube &c) {
+    //    for (PointMapIter it = c.m_MapVertices.begin();
+    //            it != c.m_MapVertices.end(); ++it) 
+    //        os << (*it).first << " --> " << (*it).second.getPoint() << " ";
+    //    return os;
+    //}
+
+
+
     /**
      * Cube start over
      * Sets all hexahedron points to init condition, all rotations will lost.
@@ -89,7 +94,7 @@ public:
      * Vertices already present in the cube are not appended.
      */
     void addNewPoint(int);
-    
+
     /**
      * Removes a edge or face point currently in the hexahedron
      */
@@ -127,31 +132,21 @@ public:
     void getCurrentPoints(vector<int> & );
 
     /**
-     * Array of cube points to x,y,z coordinate.
+     * Return vector of points
      */
-    ///static const unsigned char CubeCoordinates[27][3];
-    
-    /**
-     * Array of defined internal points.
-     */
-    static const unsigned char InternalPoints[27];
-    
-    /**
-     * Array of External points
-     */
-    static const unsigned char ExternalPoints[27];
+    void getEdgePoints(vector<int> & );
 
 private:
     /**
      * Creates eight default corner points of the hexahedron.
      * Each hexahedron point is defined by a three dimension vector (x,y,z).
      */
-    void initCornerPointVectors();
+    void addCornerPointsMap();
 
     /**
      * Adds up edge and face vectors to the hexahedron. 
      */
-    void addEdgePointVectors();
+    void addEdgePointsMap();
 
     /**
      * Calculates number of step repetions
@@ -162,7 +157,7 @@ private:
 
     typedef vector<Point> PointVector;
     typedef vector<Point>::iterator PointVectorIter;
-    
+
     typedef map<int,Point> PointMap_t;
     typedef PointMap_t::iterator PointMapIter;
 
@@ -170,19 +165,9 @@ private:
 
     //PointVector m_Vertices;
     vector<int> m_Edges;
-
-    static const int RotationCubeMatrix[1];
-};
-
-/*
-class Matrix
-{
-	Matrix();
-	virtual ~Matrix();
-
+    vector<int> m_rotated_edges;
 
 };
-*/
 
 }
 

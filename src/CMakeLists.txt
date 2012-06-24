@@ -24,6 +24,10 @@ ADD_EXECUTABLE (TestCube TestCube)
 TARGET_LINK_LIBRARIES (TestCube CubePatterns)
 set_property(TARGET TestCube PROPERTY RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/../bin)
 
+ADD_EXECUTABLE (TestPattern TestPattern)
+TARGET_LINK_LIBRARIES (TestPattern CubePatterns)
+set_property(TARGET TestPattern PROPERTY RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/../bin)
+
 
 #delete bin files in make clean
 SET_DIRECTORY_PROPERTIES (
@@ -34,10 +38,10 @@ SET_DIRECTORY_PROPERTIES (
 #target_link_libraries (Patterns MathFunctions)
 #target_link_libraries (CubePatterns CubePatterns)
 
-add_library(Patterns SHARED Patterns)
+add_library(PatternFactory SHARED PatternFactory)
 #add_library(Point Point.cpp)
 #add_library(Cube Cube.cpp)
-ADD_LIBRARY(CubePatterns SHARED Point Cube)
+ADD_LIBRARY(CubePatterns SHARED Point Cube CubePatterns)
 
 set_property(TARGET CubePatterns PROPERTY LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/../lib)
 

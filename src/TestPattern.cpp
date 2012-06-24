@@ -27,8 +27,8 @@ int main (int argc, char *argv[])
     nodes.push_back(168);
     nodes.push_back(194);
 
-    edges.push_back(8);
-    edges.push_back(10);
+    edges.push_back(11);
+    edges.push_back(17);
 
 
 
