@@ -19,6 +19,15 @@ configure_file (
 include_directories("${PROJECT_BINARY_DIR}")
 include_directories("${PROJECT_BINARY_DIR}/../include")
 
+#delete generated files  
+SET_DIRECTORY_PROPERTIES (
+   PROPERTIES 
+     ADDITIONAL_MAKE_CLEAN_FILES "MeteoDevice.h"
+     ADDITIONAL_MAKE_CLEAN_FILES "MeteoDevice.cpp"
+     ADDITIONAL_MAKE_CLEAN_FILES "${PROJECT_SOURCE_DIR}/*~"
+     ADDITIONAL_MAKE_CLEAN_FILES "${PROJECT_SOURCE_DIR}/../*~"
+)
+
 # for ../bin/TestCube executable
 ADD_EXECUTABLE (TestCube TestCube)
 TARGET_LINK_LIBRARIES (TestCube CubePatterns)
@@ -39,9 +48,9 @@ SET_DIRECTORY_PROPERTIES (
 #target_link_libraries (CubePatterns CubePatterns)
 
 add_library(PatternFactory SHARED PatternFactory)
-#add_library(Point Point.cpp)
+add_library(Point SHARED Point.cpp)
 #add_library(Cube Cube.cpp)
-ADD_LIBRARY(CubePatterns SHARED Point Cube CubePatterns)
+ADD_LIBRARY(CubePatterns SHARED Point Cube PatternFactory CubePatterns)
 
 set_property(TARGET CubePatterns PROPERTY LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/../lib)
 

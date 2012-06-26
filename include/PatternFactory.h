@@ -20,6 +20,9 @@ using namespace std;
 namespace patterns {
 
 typedef unsigned int Uint;
+typedef vector< vector<Uint> > VTable;
+typedef vector< vector<Uint> >::iterator VTableIter;
+
 static const Uint TETRA_POINTS  =4;
 static const Uint PYRAMID_POINTS=5;
 static const Uint PRISM_POINTS  =6;
@@ -30,6 +33,7 @@ static const Uint FACE_POINTS   =6;
 static const Uint TOTAL_POINTS  =27;
 static const Uint PERMUTATIONS  =30;
 static const Uint MAX_ELEMENTS  =20;
+static const Uint NUM_PATTERNS  =23;
 
 
 class PatternFactory {

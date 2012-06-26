@@ -20,15 +20,15 @@ Cube::Cube() {
 
 Cube::Cube(const vector<int>& edges ) {
     m_Edges = edges ;
-    this->addCornerPointsMap();
-    this->addEdgePointsMap();
+    addCornerPointsMap();
+    addEdgePointsMap();
 
 }
 
 void Cube::resetCube() {
     m_MapVertices.clear();
-    this->addCornerPointsMap();
-    this->addEdgePointsMap();
+    addCornerPointsMap();
+    addEdgePointsMap();
 }
 
 void Cube::addNewPoint(int point) {

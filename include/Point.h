@@ -22,6 +22,8 @@ namespace patterns {
 class Point 
 {
 public:
+
+
     /// Default constructor.
     Point() : m_id(0), m_X(0), m_Y(0), m_Z(0), m_T(1), m_point(0) { };
 

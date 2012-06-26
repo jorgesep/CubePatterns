@@ -63,7 +63,7 @@ const CubePatterns::Permutations_t CubePatterns::RotationMatrix[PERMUTATIONS] = 
     Permutations_t(Z,1)  /// Z --> 360
 };
 
-const Uint CubePatterns::PatternMask[23] = {
+const int CubePatterns::PatternMask[NUM_PATTERNS] = {
     2048,
     526336,
     133120,
@@ -167,7 +167,6 @@ void CubePatterns::rotate() {
 
     Coordinate axis;
     int step;
-    bool found = false;
     
     for (int i=0; i<PERMUTATIONS; i++) {
 
@@ -182,7 +181,7 @@ void CubePatterns::rotate() {
 
 
         //std::cout << " Edge Number " ;
-        Uint mask = 0;
+        int mask = 0;
         
         bitMask.reset();
         PatternTable_t local;
@@ -198,17 +197,21 @@ void CubePatterns::rotate() {
 
         }
    
-        //Uint size = sizeof(PatternMask) / sizeof(PatternMask[0]);
+        //int size = sizeof(PatternMask) / sizeof(PatternMask[0]);
+        cout << "Looking the pattern " << mask << " " << bitMask;
 
-        for (Uint i=0; i< 23; i++) {
-            cout << "Looking the pattern ";
-            cout << (i+1) << " " <<  mask << " " << PatternMask[i] << endl;
+        for (int i=0; i< NUM_PATTERNS; i++) {
+            //cout << "Looking the pattern ";
+            //cout << (i+1) << " " <<  mask << " " << PatternMask[i] << endl;
 
             if (mask == PatternMask[i]) {
                 cout << "=============================" << endl;
                 cout << "==== FOUND ==================" << endl;
                 cout << "=============================" << endl;
-                found = true;
+
+                PatternFactory *factory = new PatternFactory(i);
+                factory->createPattern(m_result);
+                delete factory;
                 break;
             }
 
@@ -216,7 +219,7 @@ void CubePatterns::rotate() {
         //cout << "  Edge Mask: " << mask << "  " << bitMask << " " << endl ;
         cout << "------------------------------------" << endl;
 
-        if (found) 
+        if (m_result.size() > 0) 
             break;
     }
 }

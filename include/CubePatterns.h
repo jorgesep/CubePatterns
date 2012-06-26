@@ -62,6 +62,7 @@ class CubePatterns {
 
 public:
 
+    typedef vector< vector<Uint> > VectorTable;
     enum Coordinate { X, Y, Z };
 
     /**
@@ -204,6 +205,8 @@ public:
 
     void reset();
 
+    void vectors(VectorTable &v) { v = m_result; }; 
+
 private:
 
     /**
@@ -219,15 +222,6 @@ private:
     typedef PatternTable_t::const_iterator TableIter;
     typedef map<int, CubeMapping_t> PatternMap_t;
     typedef PatternMap_t::const_iterator MapIter;
-
-    //static const unsigned int TETRA_POINTS;
-    //static const unsigned int PYRAMID_POINTS;
-    //static const unsigned int PRISM_POINTS;
-    //static const unsigned int CORNER_POINTS;
-    //static const unsigned int EDGE_POINTS;
-    //static const unsigned int FACE_POINTS;
-    //static const unsigned int TOTAL_POINTS;
-    //static const unsigned int PERMUTATIONS;
 
     Cube m_cube;
 
@@ -245,6 +239,8 @@ private:
     PatternMap_t m_localEdgesMap;
     PatternMap_t m_localPatternMap;
 
+    VectorTable m_result;
+
     /**
      * Matrix of rotations
      * Return new vertex values after one turn in one of the three x,y,z axis.
@@ -259,7 +255,7 @@ private:
      * Mask is the result to left shift number 1 by the value of the edge point.
      * Final outcome is a logical OR combination of all edge points in the pattern.
      */ 
-    static const Uint PatternMask[23];
+    static const int PatternMask[23];
 
 };
 

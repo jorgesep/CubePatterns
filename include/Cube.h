@@ -74,14 +74,6 @@ public:
         return ( (m_MapVertices != c.m_MapVertices) || (m_Edges!=c.m_Edges) );
     };
 
-    //friend ostream &operator <<(ostream& os, const Cube &c) {
-    //    for (PointMapIter it = c.m_MapVertices.begin();
-    //            it != c.m_MapVertices.end(); ++it) 
-    //        os << (*it).first << " --> " << (*it).second.getPoint() << " ";
-    //    return os;
-    //}
-
-
 
     /**
      * Cube start over
