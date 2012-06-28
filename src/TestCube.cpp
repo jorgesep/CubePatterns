@@ -12,20 +12,20 @@ using namespace std;
 int main (int argc, char *argv[])
 {
 
-    vector<int> init;
-    vector<int> _90deg;
-    vector<int> _180deg;
-    vector<int> _270deg;
-    vector<int> _0deg;
-    vector<int> nodes;
+    vector<Uint> init;
+    vector<Uint> _90deg;
+    vector<Uint> _180deg;
+    vector<Uint> _270deg;
+    vector<Uint> _0deg;
+    vector<Uint> nodes;
 
-    vector<int>::const_iterator Iter0 ;
-    vector<int>::const_iterator Iter1 ;
-    vector<int>::const_iterator Iter2 ;
-    vector<int>::const_iterator Iter3 ;
+    vector<Uint>::const_iterator Iter0 ;
+    vector<Uint>::const_iterator Iter1 ;
+    vector<Uint>::const_iterator Iter2 ;
+    vector<Uint>::const_iterator Iter3 ;
 
 
-    vector<int> edges;
+    vector<Uint> edges;
     edges.push_back(9);
     //edges.push_back(11);
 
@@ -54,7 +54,7 @@ int main (int argc, char *argv[])
 
 
     cout << "X" << endl;
-    for (vector<int>::const_iterator it  = init.begin();
+    for (vector<Uint>::const_iterator it  = init.begin();
                                it != init.end();
                              ++it)
     {
@@ -85,7 +85,7 @@ int main (int argc, char *argv[])
 
 
     cout << "Y" << endl;
-    for (vector<int>::const_iterator it  = init.begin();
+    for (vector<Uint>::const_iterator it  = init.begin();
                                it != init.end();
                              ++it)
     {
@@ -115,7 +115,7 @@ int main (int argc, char *argv[])
     Iter3 = _270deg.begin() ;
 
     cout << "Z" << endl;
-    for (vector<int>::const_iterator it  = init.begin();
+    for (vector<Uint>::const_iterator it  = init.begin();
                                it != init.end();
                              ++it)
     {

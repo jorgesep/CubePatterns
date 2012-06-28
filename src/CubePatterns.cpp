@@ -11,19 +11,6 @@ using namespace std;
 
 namespace patterns {
 
-const int CubePatterns::InternalPoints[TOTAL_POINTS] = {
-    0,  18, 20, 2, 6, 24, 26, 8,
-    9,  19, 11, 1, 3, 21, 23, 5,
-    15, 25, 17, 7,10, 12, 22,14,
-    4,  16, 13
-};
-
-const int CubePatterns::ExternalPoints[TOTAL_POINTS] = {
-    0, 11, 3,  12, 24, 15,  4, 19, 7,
-    8, 20, 10, 21, 26, 23, 16, 25,18,
-    1,  9, 2,  13, 22, 14,  5, 17, 6
-};
-
 const CubePatterns::Permutations_t CubePatterns::RotationMatrix[PERMUTATIONS] = {
 
     Permutations_t(Z,1), /// Z --> 90  
@@ -89,162 +76,138 @@ const int CubePatterns::PatternMask[NUM_PATTERNS] = {
     20496128,
 };
 
-CubePatterns::CubePatterns() :m_cube() { 
-    
+CubePatterns::CubePatterns()  { 
+
+    m_cube = new Cube();
+
+    // builds a map with default values of corner points (0,1,..7)
     createDefaultMapping(); 
 }
 
-CubePatterns::CubePatterns(const vector<int>& nodes): m_cube() {
+CubePatterns::CubePatterns(const UintVec& nodes) {
 
+    m_cube = new Cube();
+    // makes map with values of input vector
     createNodesMapping(nodes);
 }
 
-CubePatterns::CubePatterns(const vector<int>& nodes,
-        const vector<int>& edges) {
+CubePatterns::CubePatterns(const UintVec& nodes, const UintVec& edges) {
 
-    createEdgesMapping(nodes, edges);
-    m_cube = Cube(m_localVector);
+    if (edges.size() > 0 ) {
+        // Creates a map with nodes and edge values.
+        createEdgesMapping(nodes, edges);
+        m_cube = new Cube(m_localVector);
+    }
+    else {
+        createNodesMapping(nodes);
+        m_cube = new Cube();
+    }
 }
 
 void CubePatterns::createDefaultMapping() {
 
-    for (int i=0; i<CORNER_POINTS; i++) 
-        m_NodesMap.insert(make_pair(InternalPoints[i],CubeMapping_t(i , i)));
+    for (Uint i=0; i<CORNER_POINTS; i++) 
+        m_NodesMap.insert( make_pair( i, CubeMapping_t(i , i)) );
 
 }
-void CubePatterns::createNodesMapping(const vector<int>& nodes) {
 
-    int SIZE = CORNER_POINTS;
+/// Insert input vector into internal map.
+void CubePatterns::createNodesMapping(const UintVec& nodes) {
+
+    Uint SIZE = CORNER_POINTS;
     if (nodes.size() < SIZE)
         SIZE = nodes.size();
 
-    TableIter it = nodes.begin();
-    for (int i=0; i< SIZE; i++)
-        m_NodesMap.insert(make_pair(InternalPoints[i],CubeMapping_t(i,*it++)));
+    UintVecIt it = nodes.begin();
+    for (Uint i=0; i< SIZE; i++)
+        m_NodesMap.insert( make_pair( i, CubeMapping_t(i,*it++)) );
 }
 
-void CubePatterns::createEdgesMapping(const vector<int>& nodes,
-        const vector<int>& edges) {
+/// Insert the input vector of edge point into local vector.
+void CubePatterns::createEdgesMapping(const UintVec& nodes, const UintVec& edges) {
 
+    // insert first eight input nodes into an internal map.
     createNodesMapping(nodes);
 
     m_localVector.clear();
 
-    //int SIZE = nodes.size() - edges.size();
-    TableIter itn = nodes.begin() + CORNER_POINTS;
-    TableIter ite;
+    UintVecIt itn = nodes.begin() + CORNER_POINTS;
+    UintVecIt ite = edges.begin();
 
-    for (ite=edges.begin(); ite != edges.end(); ++ite) {
-        cout << "createEdgesMapping --> size: " << edges.size() 
-            <<" Edge: " << *ite << " InternalPoint[" << *ite << "]: " 
-            << InternalPoints[*ite] << " Node: " << *itn << endl;
+    int SIZE;
+    if ( nodes.size() > CORNER_POINTS)
+        SIZE = nodes.size() - CORNER_POINTS;
+    else 
+        SIZE = nodes.size();
 
-        m_NodesMap.insert(make_pair(InternalPoints[*ite], 
-                    CubeMapping_t(*ite, *itn++)));
 
-        m_localVector.push_back(InternalPoints[*ite]);
+    for ( itn; itn != nodes.end(); ++itn) {
+
+        // This map is a link of internal and external points
+        // The constructor was created with point 123 which is linked to 11
+        // Example: 11 --> (11,123)
+        m_NodesMap.insert( make_pair( *ite, CubeMapping_t(*ite, *itn) ) );
+
+        //Keep a local copy of edge nodes.
+        m_localVector.push_back(*ite);
+
+        ++ite;
 
     }
 }
 
-
-
-bool CubePatterns::findLocalPattern()
-{
-
-    if ( (m_NodesMap.size() != 0) && (m_localEdgesMap.size() != 0) )
-    {
-        m_patternHasBeenFound = true;
-    }
-    else
-        m_patternHasBeenFound = false;
-
-    return m_patternHasBeenFound;
-
-}
-
-void CubePatterns::rotate() {
+/// Rotate cube until find a pattern
+void CubePatterns::search() {
 
     Coordinate axis;
     int step;
-    
+
+    // Max cube rotation defined in PERMUTATIONS
     for (int i=0; i<PERMUTATIONS; i++) {
 
         axis = RotationMatrix[i].Axis;
         step = RotationMatrix[i].Step;
         if (axis == X)
-            m_cube.rotX(step);
+            m_cube->rotX(step);
         else if (axis == Y)
-            m_cube.rotY(step);
-        else if (axis ==Z)
-            m_cube.rotZ(step);
+            m_cube->rotY(step);
+        else if (axis ==Z) 
+            m_cube->rotZ(step);
 
-
-        //std::cout << " Edge Number " ;
         int mask = 0;
         
         bitMask.reset();
-        PatternTable_t local;
+        // vector to return rotated edge points.
+        UintVec local;
+        m_cube->getEdgePoints(local);
 
-        m_cube.getEdgePoints(local);
-        for (TableIter it=local.begin(); it != local.end(); ++it) {
+        for (UintVecIt it=local.begin(); it != local.end(); ++it) {
 
-            //cout << *it << " --> " << ExternalPoints[*it] << " ";
-
-            mask |= 1<<ExternalPoints[*it];
-
-            bitMask.set(ExternalPoints[*it]);
+            mask |= 1<<(*it);
+            bitMask.set(*it);
 
         }
    
-        //int size = sizeof(PatternMask) / sizeof(PatternMask[0]);
-        cout << "Looking the pattern " << mask << " " << bitMask;
-
         for (int i=0; i< NUM_PATTERNS; i++) {
-            //cout << "Looking the pattern ";
-            //cout << (i+1) << " " <<  mask << " " << PatternMask[i] << endl;
 
             if (mask == PatternMask[i]) {
-                cout << "=============================" << endl;
-                cout << "==== FOUND ==================" << endl;
-                cout << "=============================" << endl;
 
                 PatternFactory *factory = new PatternFactory(i);
                 factory->createPattern(m_result);
                 delete factory;
+
                 break;
             }
 
         }
-        //cout << "  Edge Mask: " << mask << "  " << bitMask << " " << endl ;
-        cout << "------------------------------------" << endl;
-
         if (m_result.size() > 0) 
             break;
     }
 }
 
-void CubePatterns::rotateCubePatterns(int times = 1 )
-{
-//    if (m_localPatternMap.size() == CORNER_POINTS)
-//    {
-//        /*
-//           for (int i=0; i<times; i++)
-//           {
-//           for (PatternTable_t::iterator it=m_localVector.begin(); it!=m_localVector.end(); ++it )
-//           {
-//           (*it).second = RotationMatrix[rotation_positions[turn][(*it).first]];
-//           }
-//           }
-//           */
-//    }
-}
-
 
 void CubePatterns::reset()
 {
-    if (m_localPatternMap.size() > 0)
-        m_localPatternMap.clear();
 
     if (m_NodesMap.size() > 0)
         m_NodesMap.clear();
@@ -258,11 +221,51 @@ void CubePatterns::initialize()
     if (m_localVector.size() > 0)
         m_localVector.clear();
 
-    for(unsigned int i=0; i<TOTAL_POINTS; i++)
+    for(Uint i=0; i<TOTAL_POINTS; i++)
     {
         m_localVector.push_back(i);
     }
 }
 
+void CubePatterns::vectors(VectorTable &v) {
+
+    UintMap points;
+
+    // Returns: rotated --> init point
+    m_cube->getCurrentPoints(points);
+
+    if(!m_result.empty()) {
+       for (VectorTableIt it=m_result.begin(); it != m_result.end(); ++it) {
+   
+           UintVec p;
+   
+           for (UintVecIt it1=(*it).begin(); it1!=(*it).end(); ++it1) {
+               Uint internal = points.find(*it1)->second;
+               p.push_back( m_NodesMap.find(internal)->second.External );
+           }
+   
+           v.push_back(p);
+       }
+    }
+}
+
+void CubePatterns::normal_vectors(VectorTable &v) {
+
+    UintMap points;
+
+    // Returns: rotated --> init point
+    m_cube->getCurrentPoints(points);
+
+
+    for (VectorTableIt it=m_result.begin(); it != m_result.end(); ++it) {
+
+        UintVec p;
+
+        for (UintVecIt it1=(*it).begin(); it1!=(*it).end(); ++it1) 
+            p.push_back(points.find(*it1)->second);
+
+        v.push_back(p);
+    }
+}
 }
 

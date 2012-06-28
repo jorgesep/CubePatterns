@@ -11,117 +11,174 @@
 using namespace patterns;
 using namespace std;
 
-void getNodesFromFile(string, vector<int> & , vector<int> & ); 
+
+vector<string> rows;
+
+void print_out(const vector<Uint>& , const vector<Uint>& , const vector< vector<Uint> >&);
+void read_file(string);
+void get_nodes(vector<Uint> & , vector<Uint> & ); 
+
 
 int main (int argc, char *argv[])
 {
-    string filename;
 
     if(argc != 3) {
-      cout << "Usage:" << endl;
-      cout << argv[0] << "-f Filename" << endl;
+      cout << endl << "Usage:" << endl;
+      cout << argv[0] << " -f Filename" << endl << endl;
       return 1;
     }
    
+    string filename;
     if(strcmp(argv[1], "-f") == 0) {
         filename = argv[2];
     }
 
-    vector<int> nodes;
-    vector<int> edges;
-
-    getNodesFromFile(filename,nodes,edges);
+    read_file(filename);
 
 
-    CubePatterns *pattern = new CubePatterns(nodes, edges);
+    while(rows.size() > 0 ) {
 
-    pattern->rotate();
+        vector<Uint> nodes;
+        vector<Uint> edges;
+        vector< vector<Uint> > result;
 
-    vector< vector<Uint> > result;
-    pattern->vectors(result);
+        get_nodes(nodes,edges);
 
-//    for (vector< vector<Uint> >::iterator it = result.begin(); it != result.end(); ++it) {
-//        for (vector<Uint>::iterator it1=(*it).begin(); it1=(*it).end(); ++it1) {
-//        //    cout << " " << (*it1) ;
-//        }
-//        cout << endl;
-//    }
-
-for (vector< vector<Uint> >::iterator it=result.begin(); it != result.end() ; ++it) {
-    for (vector<Uint>::iterator it1=(*it).begin(); it1 != (*it).end(); ++it1) {
-        cout << (*it1) << endl;
+        CubePatterns *pattern = new CubePatterns(nodes, edges);
+    
+        pattern->search();
+    
+        pattern->vectors(result);
+    
+        print_out(nodes,edges,result);
+    
+        delete pattern;
     }
-}
-
-
-
-    delete pattern;
 
     return 0;
 }
 
+void print_out(const vector<Uint>& cp,
+        const vector<Uint>& ep, 
+        const vector< vector<Uint> >& res) {
 
+    cout << "Hexahedron: " ;
+    if ( cp.size() > 0 ) {
+        for (int i=0; i<8; i++)
+            cout << cp[i] << " ";
+    }
 
+    int size = cp.size() - 8;
+    if( ep.size() > 0 ) {
+       for (int i=0; i<size; i++)
+           cout << cp[i+8] << "(" << ep[i] << ") ";
+    }
 
-void getNodesFromFile(string name, vector<int> & _cp, vector<int> & _ep) {
+    cout << endl;
+
+    if( res.size() > 0 ){
+
+        for (vector< vector<Uint> >::const_iterator it=res.begin(); it != res.end() ; ++it) {
+            if      ( (*it).size() == 4) cout << " tetra ";
+            else if ( (*it).size() == 5) cout << " pyram ";
+            else if ( (*it).size() == 6) cout << " prism ";
+            else if ( (*it).size() == 8) cout << " hexa  ";
+            for (vector<Uint>::const_iterator it1=(*it).begin(); it1 != (*it).end(); ++it1) {
+    
+                cout << (*it1) << " ";
+            }
+            cout << endl;
+        }
+
+    }
+    else
+        cout << "Pattern not found !! " << endl;
+}
+
+void read_file(string name) {
 
     ifstream file;
     string line;
 
-    //file.open ("patterns.txt");
     file.open (name.c_str());
 
     if (file.is_open()) {
         while(!file.eof()) {
+
             getline (file,line);
-            
-            int pos = line.find(" ");
 
-            if ( pos  != string::npos)  {
+            if ((line.find("#") == string::npos) && (!line.empty())){ 
 
-                string cp = line.substr(0,pos);
-                string ep = line.substr(pos+1);
+                rows.push_back(line);
 
-                int num;
-
-                while ((pos = cp.find("," )) != string::npos ) {
-
-                    istringstream(cp.substr(0,pos)) >> num ;
-                    _cp.push_back(num);
-
-                    cp = cp.substr(pos+1);
-
-                    if ( ( cp.find(",") == string::npos ) && ( cp.size() > 0 ) ) {
-
-                        istringstream(cp) >> num ;
-                        _cp.push_back(num);
-
-                    }
-                }
-
-                while ((pos = ep.find("," )) != string::npos ) {
-
-                    istringstream(ep.substr(0,pos)) >> num ;
-                    _ep.push_back(num);
-
-                    ep = ep.substr(pos+1);
-
-                    if ( ( ep.find(",") == string::npos ) && ( ep.size() > 0 ) ) {
-
-                        istringstream(ep) >> num ;
-                        _ep.push_back(num);
-
-                    }
-                }
             }
         }
     }
     else {
 
-        cout << "File not found ..." << endl;
-        exit(0);
+        cout << "File " << name << " not found ..." << endl;
+        exit(1);
 
     }
 
     file.close();
 }
+
+void get_nodes(vector<Uint> & _cp, vector<Uint> & _ep) {
+
+    vector<string>::iterator it = rows.begin();
+    string line(*it);
+    rows.erase(it);
+    
+    int pos = line.find(" ");
+
+    if ( pos  != string::npos)  {
+
+        string cp = line.substr(0,pos);
+        string ep = line.substr(pos+1);
+
+        int num;
+
+        while ((pos = cp.find("," )) != string::npos ) {
+
+            istringstream(cp.substr(0,pos)) >> num ;
+            _cp.push_back(num);
+
+            cp = cp.substr(pos+1);
+
+        }
+        if ( cp.size() > 0 ) {
+
+            istringstream(cp) >> num ;
+            _cp.push_back(num);
+
+        }
+
+        while ((pos = ep.find("," )) != string::npos ) {
+
+            istringstream(ep.substr(0,pos)) >> num ;
+            _ep.push_back(num);
+
+            ep = ep.substr(pos+1);
+
+//            if ( ( ep.find(",") == string::npos ) && ( ep.size() > 0 ) ) {
+//
+//                istringstream(ep) >> num ;
+//                _ep.push_back(num);
+//
+//            }
+        }
+        if (  ep.size() > 0  ) {
+
+            istringstream(ep) >> num ;
+            _ep.push_back(num);
+
+        }
+
+
+
+    }
+}
+
+
+

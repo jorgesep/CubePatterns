@@ -127,11 +127,11 @@ const int Point::RotationMatrix_Z [4][4][4] =
 
 Point::Point(int id, int x, int y, int z)
     : m_id(id), m_X(x), m_Y(y), m_Z(z), m_T(1) { 
-    m_point = this->CoordinatesToPoint(); 
+    m_point = CoordinatesToPoint(); 
 }
 
 Point::Point(int x, int y, int z): m_X(x), m_Y(y), m_Z(z), m_T(1) { 
-    m_point = this->CoordinatesToPoint(); 
+    m_point = CoordinatesToPoint(); 
     m_id    = m_point;
 }
 
@@ -197,7 +197,6 @@ int Point::rotate(int axis, int number_steps) {
         for (int i=0; i<4; i++)
         {
             temp[i] = rot[i][0]*m_X + rot[i][1]*m_Y + rot[i][2]*m_Z + rot[i][3]*m_T;
-            //std::cout << "point=" << temp[i] << " [" << rot[i][0]  << " " << rot[i][1] << " " << rot[i][2] << " " << rot[i][3] << "] * [" << m_X << " " << m_Y << " " << m_Z << " " << m_T <<"]" << std::endl ; 
         }
 
         m_X = temp[0];

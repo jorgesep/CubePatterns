@@ -61,8 +61,15 @@ namespace patterns {
 class CubePatterns {
 
 public:
+    typedef map<Uint, Uint>         UintMap;
+    typedef UintMap::iterator       UintMapIt;
 
-    typedef vector< vector<Uint> > VectorTable;
+    typedef vector<Uint>            UintVec;
+    typedef UintVec::const_iterator UintVecIt;
+
+    typedef vector< UintVec >       VectorTable;
+    typedef VectorTable::iterator   VectorTableIt;
+    
     enum Coordinate { X, Y, Z };
 
     /**
@@ -73,7 +80,7 @@ public:
         CubeMapping_t (): Local(0), External(0) { };
 
         //Default constructor
-        CubeMapping_t (int p1, int p2): Local(p1), External(p2) { };
+        CubeMapping_t (Uint p1, Uint p2): Local(p1), External(p2) { };
 
         //Copy constructor
         CubeMapping_t (const CubeMapping_t & m ) { *this = m; };
@@ -97,8 +104,8 @@ public:
             return ((Local != m.Local) || (External != m.External));
         }
 
-        int Local;
-        int External;
+        Uint Local;
+        Uint External;
     };
 
     struct Permutations_t {
@@ -145,7 +152,7 @@ public:
      * Takes first eight number as corner points, the other input number are
      * not considered.
      */
-    CubePatterns( const vector<int>& );
+    CubePatterns( const UintVec& );
 
     /**
      * Cube parametric constructor.
@@ -153,12 +160,12 @@ public:
      * as edge points. 
      * The second vector is the mapping of edge points to internal convention.
      */
-    CubePatterns(const vector<int>&, const vector<int>& );
+    CubePatterns(const UintVec&, const UintVec& );
 
-    virtual ~CubePatterns() { };
+    virtual ~CubePatterns() { delete m_cube; };
 
     /**
-     * Rotate the cube to left or right position in one of the 
+     * Rotates the cube to left or right position in one of the 
      * three x,y,z axis.
      *
      * For each of the axis movement has been defined a default 
@@ -175,37 +182,21 @@ public:
      *   |/          |/    |/          |/     |/          |/  
      *   1-----------2     0----8------3      4-----------5  
      *
+     * Saves the pattern found in a vector of integer vectors.
      */
-    void rotate();
-    void setFacePoints();
-    void setEdgePoints();
-    void setCornerPoints();
-
-    /** 
-     *  Creates an internal map of the input nodes into defined vertexs
-     *  numbered from 0 to 25 of a basic hexahedron. The first eight nodes
-     *  (0-7) are the corner vertexs of this hexahedron, the other left
-     *  nodes are vertexs located either at any edges or any of the faces
-     *  of this hexahedron.
-     */
-//    void mapLocalCubePatterns(const std::vector<unsigned int>& , 
-//            const std::vector<unsigned int>& );
-
-    void createLocalMapping(const vector<int>& );
+    void search();
 
     /**
-     * Match the input hexahedron to any of the patterns defined.
+     * Reset both nodes map and local vector.
      */
-    bool findLocalPattern();
-
-    /**
-     * Rotates hexahedron n times to Rotation position.
-     */
-    void rotateCubePatterns(int);
-
     void reset();
 
-    void vectors(VectorTable &v) { v = m_result; }; 
+    /**
+     * Return final pattern result.
+     */
+    //void vectors(VectorTable &v) { v = m_result; }; 
+    void vectors(VectorTable &); 
+    void normal_vectors(VectorTable &); 
 
 private:
 
@@ -214,30 +205,41 @@ private:
      */
     void initialize();
 
+    /** 
+     *  Creates an internal map of the input nodes into defined vertexs
+     *  numbered from 0 to 25 of a basic hexahedron. The first eight nodes
+     *  (0-7) are the corner vertexs of this hexahedron, the other left
+     *  nodes are vertexs located either at any edges or any of the faces
+     *  of this hexahedron.
+     */
+    void createLocalMapping(const UintVec& );
+
     void createDefaultMapping();
-    void createNodesMapping(const vector<int>&);
-    void createEdgesMapping(const vector<int>&, const vector<int>&);
 
-    typedef vector<int> PatternTable_t;
-    typedef PatternTable_t::const_iterator TableIter;
-    typedef map<int, CubeMapping_t> PatternMap_t;
-    typedef PatternMap_t::const_iterator MapIter;
+    /**
+     * Insert the first eight points of input vector and insert them
+     * into the internal map of nodes.
+     */
+    void createNodesMapping(const UintVec&);
 
-    Cube m_cube;
+    /**
+     * Takes all the edge input points and insert them into a local vector.
+     */
+    void createEdgesMapping(const UintVec&, const UintVec&);
 
-    int m_numVertex;
-    int m_numTetra;
-    int m_numPyramid;
-    int m_numPrism;
-
-    bool m_patternHasBeenFound;
+    Cube * m_cube;
 
     bitset<27> bitMask;
 
-    PatternTable_t m_localVector;
+    //This vector will keep a local copy of edge nodes.
+    UintVec m_localVector;
+
+
+    typedef map<Uint, CubeMapping_t> PatternMap_t;
+    typedef PatternMap_t::const_iterator MapIter;
+
+    // Map: Point --> (Local, External)
     PatternMap_t m_NodesMap;
-    PatternMap_t m_localEdgesMap;
-    PatternMap_t m_localPatternMap;
 
     VectorTable m_result;
 
@@ -246,10 +248,6 @@ private:
      * Return new vertex values after one turn in one of the three x,y,z axis.
      */
     static const Permutations_t RotationMatrix[];
-
-    static const int ExternalPoints[];
-
-    static const int InternalPoints[];
 
     /**
      * Mask is the result to left shift number 1 by the value of the edge point.

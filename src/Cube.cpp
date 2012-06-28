@@ -6,6 +6,7 @@
  */
 
 #include <math.h>
+#include <algorithm>
 #include "Cube.h"
 
 
@@ -14,13 +15,37 @@ using namespace std;
 
 namespace patterns {
 
+const Uint Cube::ExternalToInternal[TOTAL_POINTS] = {
+    0,  18, 20, 2, 6, 24, 26, 8,
+    9,  19, 11, 1, 3, 21, 23, 5,
+    15, 25, 17, 7,10, 12, 22,14,
+    4,  16, 13
+};
+
+const Uint Cube::InternalToExternal[TOTAL_POINTS] = {
+    0, 11, 3,  12, 24, 15,  4, 19, 7,
+    8, 20, 10, 21, 26, 23, 16, 25,18,
+    1,  9, 2,  13, 22, 14,  5, 17, 6
+};
+
+
 Cube::Cube() { 
-    this->addCornerPointsMap(); 
+    //Default eight corner point.
+    addCornerPointsMap(); 
 }
 
-Cube::Cube(const vector<int>& edges ) {
-    m_Edges = edges ;
+Cube::Cube(const vector<Uint>& edges ) {
+
+    // Convert input edge point to local internal mapping.
+    for (int i=0; i<edges.size(); i++)
+        m_edges.push_back(ExternalToInternal[edges[i]]);
+
+    // Sort points ascending.
+    sort (m_edges.begin(), m_edges.begin() + m_edges.size() );
+
+    //Insert eight default corner points into the map.
     addCornerPointsMap();
+    //Inserts input edge points into the same map of corner points.
     addEdgePointsMap();
 
 }
@@ -35,9 +60,7 @@ void Cube::addNewPoint(int point) {
     Point tmpPoint = Point(point);
 
     if (m_MapVertices.find(tmpPoint.getID()) == m_MapVertices.end())
-    {
         m_MapVertices.insert(std::make_pair(tmpPoint.getID(), tmpPoint));
-    }
 }
 
 void Cube::deletePoint(int point)
@@ -47,29 +70,38 @@ void Cube::deletePoint(int point)
 
 void Cube::rotate(int axis, int rot) {
     if ((axis > -1) && (axis < 3)) {
-        vector<int>::iterator Iter = m_Edges.begin();
+        // Get iter to edge points previously sets up.
+        vector<Uint>::iterator Iter = m_edges.begin();
+
+        // Clean up all previous rotation
         m_rotated_edges.clear();
 
-        /// Gets the integer number of 90 degree steps.
+        /// Gets a number of 90 degree steps.
         /// If negative rotation converts to similar positive rotation.
         int step = this->getRotationSteps(rot);
-
-        for (PointMapIter it  = m_MapVertices.begin(); 
-                it != m_MapVertices.end(); 
+        /// This cycle performs rotation in any of the tree axis.
+        // Rotates all points of the map (corner and edge points)
+        for (PointMapIter it  = m_MapVertices.begin(); it != m_MapVertices.end(); 
                 ++it) {
-            if (axis == 0)
+            if      (axis == 0)
                 (*it).second.rotX(step);
+
             else if (axis == 1)
                 (*it).second.rotY(step);
+
             else if (axis == 2)
                 (*it).second.rotZ(step);
+            
+            if (!m_edges.empty()) 
+            {
+                if ( (*it).first == (*Iter) ) {
+    
+                    // Puts into local vector the point number
+                    // It is just the result  of rotated edge points.
+                    m_rotated_edges.push_back((*it).second.getPoint());
+                    ++Iter;
+                }
 
-            if ( (*it).first == (*Iter) ) {
-
-//                cout << "Cube::rotate :" << (*it).first
-//                    << " --> " << (*it).second.getPoint() << " " ;
-                m_rotated_edges.push_back((*it).second.getPoint());
-                Iter++;
             }
 
         }
@@ -88,38 +120,56 @@ void Cube::rotZ(int rotation) {
     this->rotate(2,rotation);
 }
 
-void Cube::getInitPoints(vector<int> & nodes) {
+void Cube::getInitPoints(vector<Uint> & nodes) {
     nodes.clear();
 
     for (PointMapIter it  = m_MapVertices.begin(); 
             it != m_MapVertices.end(); 
             ++it) {
-        nodes.push_back( (*it).first );
+        nodes.push_back( InternalToExternal[(*it).first] );
     }
 }
 
 
-void Cube::getCurrentPoints(vector<int> & nodes) {
+void Cube::getCurrentPoints(vector<Uint> & nodes) {
     nodes.clear();
 
     for (PointMapIter it  = m_MapVertices.begin(); 
             it != m_MapVertices.end(); 
             ++it) {
-        nodes.push_back( (*it).second.getPoint() );
+        nodes.push_back( InternalToExternal[(*it).second.getPoint()] );
     }
 }
 
-void Cube::getEdgePoints(vector<int> & edges) {
+void Cube::getCurrentPoints(map<Uint, Uint> & nodes) {
+    nodes.clear();
 
-    if (m_rotated_edges.empty())
-        edges = m_Edges;
-    else
-        edges = m_rotated_edges;
+    for (PointMapIter it  = m_MapVertices.begin(); 
+            it != m_MapVertices.end(); 
+            ++it) {
+        nodes.insert( make_pair(InternalToExternal[(*it).second.getPoint()],
+                                InternalToExternal[(*it).second.getID()]));
+    }
+}
+
+
+
+void Cube::getEdgePoints(vector<Uint> & edges) {
+
+    if (m_rotated_edges.empty()) {
+        for (Uint i=0; i<m_edges.size(); i++)
+            edges.push_back( InternalToExternal[ m_edges[i] ] );
+    }
+    else {
+        for (Uint i=0; i<m_rotated_edges.size(); i++)
+            edges.push_back( InternalToExternal[ m_rotated_edges[i] ] );
+    }
 
 }
 
 void Cube::addCornerPointsMap() {
 
+    // Map of defaultvertices.
     m_MapVertices.insert(std::make_pair(0, Point(0,0,0)));/// 0
     m_MapVertices.insert(std::make_pair(18,Point(0,0,2)));/// 18
     m_MapVertices.insert(std::make_pair(20,Point(2,0,2)));/// 20
@@ -132,11 +182,11 @@ void Cube::addCornerPointsMap() {
 }
 
 void Cube::addEdgePointsMap() {
-    if (!m_Edges.empty()) {
+    if (!m_edges.empty()) {
 
-        for (vector<int>::iterator it  = m_Edges.begin(); 
-                it != m_Edges.end(); 
-                ++it)
+        for (vector<Uint>::iterator it  = m_edges.begin(); 
+                it != m_edges.end(); 
+                ++it) 
             m_MapVertices.insert(std::make_pair( Point(*it).getID(), Point(*it)));
     }
 

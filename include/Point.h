@@ -18,6 +18,7 @@
 
 namespace patterns {
 
+typedef unsigned int Uint;
 
 class Point 
 {
@@ -147,14 +148,18 @@ public:
     int rotZ(int step) { return this->rotate(2,step); };
 
     /**
-     * Returns vertex number.
+     * Returns point rotated.
      */
-    int getPoint() { return m_point; }
+    Uint getPoint() { return (Uint)m_point; }
 
     int getX() { return m_X; };
     int getY() { return m_Y; };
     int getZ() { return m_Z; };
-    int getID() { return m_id; };
+
+    /**
+     * Returns initial point values, it has not changed despite of rotations.
+     */
+    Uint getID() { return (Uint)m_id; };
 
     void setX(int _x) { m_X = _x; };
     void setY(int _y) { m_Y = _y; };

@@ -27,6 +27,8 @@ SET_DIRECTORY_PROPERTIES (
      ADDITIONAL_MAKE_CLEAN_FILES "${PROJECT_SOURCE_DIR}/*~"
      ADDITIONAL_MAKE_CLEAN_FILES "${PROJECT_SOURCE_DIR}/../*~"
 )
+# Set DEBUG option
+option(DEBUG "DEBUG option to print out more info" ON)
 
 # for ../bin/TestCube executable
 ADD_EXECUTABLE (TestCube TestCube)
@@ -43,13 +45,12 @@ SET_DIRECTORY_PROPERTIES (
    PROPERTIES
       ADDITIONAL_MAKE_CLEAN_FILES "${PROJECT_SOURCE_DIR}/../bin/*"
 )
-#target_link_libraries (TestCube Point)
-#target_link_libraries (Patterns MathFunctions)
-#target_link_libraries (CubePatterns CubePatterns)
 
-add_library(PatternFactory SHARED PatternFactory)
-add_library(Point SHARED Point.cpp)
-#add_library(Cube Cube.cpp)
+#ADD_LIBRARY(PatternFactory SHARED PatternFactory)
+#ADD_LIBRARY(Cube SHARED Cube.cpp)
+#ADD_LIBRARY(Point SHARED Point.cpp)
+#ADD_LIBRARY(CubePatterns SHARED CubePatterns.cpp)
+
 ADD_LIBRARY(CubePatterns SHARED Point Cube PatternFactory CubePatterns)
 
 set_property(TARGET CubePatterns PROPERTY LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/../lib)

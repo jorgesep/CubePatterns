@@ -37,6 +37,7 @@ namespace patterns {
  */
 class Cube {
 public:
+    //typedef unsigned int Uint;
     /**
      * Default constructor.
      */
@@ -47,7 +48,7 @@ public:
     /**
      * Creates a cube assigning edge and mid points.
      */
-    Cube(const vector<int>& edges);
+    Cube(const vector<Uint>& edges);
 
     /**
      * Copy constructor
@@ -59,7 +60,7 @@ public:
      */
     Cube &operator =(const Cube &c)  
     {
-        if (*this != c) { m_MapVertices = c.m_MapVertices; m_Edges = c.m_Edges; }
+        if (*this != c) { m_MapVertices = c.m_MapVertices; m_edges = c.m_edges; }
         return *this;
     };
 
@@ -67,11 +68,11 @@ public:
      * Equals operator
      */ 
     bool operator ==(const Cube &c) const {
-        return ( (m_MapVertices == c.m_MapVertices) || (m_Edges==c.m_Edges) );
+        return ( (m_MapVertices == c.m_MapVertices) || (m_edges==c.m_edges) );
     };
 
     bool operator !=(const Cube &c) const {
-        return ( (m_MapVertices != c.m_MapVertices) || (m_Edges!=c.m_Edges) );
+        return ( (m_MapVertices != c.m_MapVertices) || (m_edges!=c.m_edges) );
     };
 
 
@@ -116,27 +117,33 @@ public:
     /**
      * Return init points
      */
-    void getInitPoints(vector<int> & );
+    void getInitPoints(vector<Uint> & );
 
     /**
      * Return vector of points
      */
-    void getCurrentPoints(vector<int> & );
+    void getCurrentPoints(vector<Uint> & );
+
+    /**
+     * Return map of init and rotated value of each point.
+     */
+    void getCurrentPoints(map<Uint, Uint>& );
 
     /**
      * Return vector of points
      */
-    void getEdgePoints(vector<int> & );
+    void getEdgePoints(vector<Uint> & );
 
 private:
     /**
-     * Creates eight default corner points of the hexahedron.
-     * Each hexahedron point is defined by a three dimension vector (x,y,z).
+     * Creates a default eight corner points.
+     * Populates internal map with a vertice and object point.
+     * Each point is defined by a vector of three dimensions (x,y,z).
      */
     void addCornerPointsMap();
 
     /**
-     * Adds up edge and face vectors to the hexahedron. 
+     * Inserts edge vectors into the internal map
      */
     void addEdgePointsMap();
 
@@ -150,14 +157,31 @@ private:
     typedef vector<Point> PointVector;
     typedef vector<Point>::iterator PointVectorIter;
 
-    typedef map<int,Point> PointMap_t;
+    /**
+     * Map of a vertice and object point (x,y,z)
+     */
+    typedef map<Uint,Point> PointMap_t;
     typedef PointMap_t::iterator PointMapIter;
 
     PointMap_t  m_MapVertices;
 
-    //PointVector m_Vertices;
-    vector<int> m_Edges;
-    vector<int> m_rotated_edges;
+    vector<Uint> m_edges;
+    vector<Uint> m_rotated_edges;
+
+    // total number of cube points
+    static const Uint TOTAL_POINTS = 27;
+
+    /**
+     * Public points defined in the patterns.
+     */
+    static const Uint ExternalToInternal[];
+
+    /**
+     * Container of internal points defined in cube class
+     */
+    static const Uint InternalToExternal[];
+
+
 
 };
 
