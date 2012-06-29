@@ -17,22 +17,22 @@ using namespace std;
 
 namespace patterns {
 
-/**
+ /**
  * Creates a basic cube
- *
- *       6--------7--------8
- *      /|                /|
- *     / |               / |
- *   15  |     16       17 |
- *   /   3        4    /   5
- * 24----+--25--------26   |
- *  | 12 |        13  |  14|
- *  |    0--------1---|----2
- *  |   /             |   /
- *  |  9        10    |  11
- * 21 /       22      23/
- *  |/                |/
- * 18--------19-------20
+ *         External                           Internal
+ *       4--------19-------7              6--------7--------8
+ *      /|                /|             /|                /|
+ *     / |               / |            / |               / |
+ *   16  |     24       18 |          15  |     16       17 |
+ *   /   12       4    /   15         /   3        4    /   5
+ *  5----+--17--------6   3|        24----+--25--------26   |
+ *  | 21 |        13  |  2 |  <-->   | 12 |        13  |  14|
+ *  |    0--------11--|----3         |    0--------1---|- --2
+ *  |   /             |   /          |   /             |   /
+ *  |  8        20    |  10          |  9        10    |  11
+ * 13 /       22      14/           21 /       22      23/
+ *  |/                |/             |/                |/
+ *  1--------9--------2             18--------19-------20
  *
  */
 class Cube {
@@ -134,6 +134,11 @@ public:
      */
     void getEdgePoints(vector<Uint> & );
 
+    /**
+     * Return mask of edge points
+     */
+    Uint getEdgePointsMask() { return m_mask; };
+
 private:
     /**
      * Creates a default eight corner points.
@@ -180,6 +185,8 @@ private:
      * Container of internal points defined in cube class
      */
     static const Uint InternalToExternal[];
+
+    Uint m_mask;
 
 
 

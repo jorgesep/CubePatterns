@@ -55,12 +55,15 @@ const int CubePatterns::PatternMask[NUM_PATTERNS] = {
     526336,
     133120,
     10240,
+    18432,   // 11|14
     272384,
-    534528,
-    6144,
-    657408,
-    530432,
-    526592,
+    534528,  // 11|13|19
+    542720,  // 11|14|19
+    6400,    // 8|11|12
+    657408,  // 11|17|19
+    530432,  // 11|12|19
+    559104,  // 11|15|19 
+    526592,  // 8|11|19
     17340416,
     657920,
     550912,
@@ -73,7 +76,7 @@ const int CubePatterns::PatternMask[NUM_PATTERNS] = {
     719360,
     6144,
     17342208,
-    20496128,
+    20496128
 };
 
 CubePatterns::CubePatterns()  { 
@@ -141,7 +144,7 @@ void CubePatterns::createEdgesMapping(const UintVec& nodes, const UintVec& edges
         SIZE = nodes.size();
 
 
-    for ( itn; itn != nodes.end(); ++itn) {
+    for ( ;itn != nodes.end(); ++itn) {
 
         // This map is a link of internal and external points
         // The constructor was created with point 123 which is linked to 11
@@ -174,20 +177,8 @@ void CubePatterns::search() {
         else if (axis ==Z) 
             m_cube->rotZ(step);
 
-        int mask = 0;
+        Uint mask = m_cube->getEdgePointsMask();
         
-        bitMask.reset();
-        // vector to return rotated edge points.
-        UintVec local;
-        m_cube->getEdgePoints(local);
-
-        for (UintVecIt it=local.begin(); it != local.end(); ++it) {
-
-            mask |= 1<<(*it);
-            bitMask.set(*it);
-
-        }
-   
         for (int i=0; i< NUM_PATTERNS; i++) {
 
             if (mask == PatternMask[i]) {
@@ -198,8 +189,8 @@ void CubePatterns::search() {
 
                 break;
             }
-
         }
+        
         if (m_result.size() > 0) 
             break;
     }
