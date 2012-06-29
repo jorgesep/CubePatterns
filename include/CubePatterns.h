@@ -253,7 +253,7 @@ private:
      * Mask is the result to left shift number 1 by the value of the edge point.
      * Final outcome is a logical OR combination of all edge points in the pattern.
      */ 
-    static const int PatternMask[23];
+    static const int PatternMask[];
 
 };
 

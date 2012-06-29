@@ -29,25 +29,28 @@ const Uint Cube::InternalToExternal[TOTAL_POINTS] = {
 };
 
 
-Cube::Cube() { 
+Cube::Cube(): m_mask(0) { 
     //Default eight corner point.
     addCornerPointsMap(); 
 }
 
-Cube::Cube(const vector<Uint>& edges ) {
+Cube::Cube(const vector<Uint>& edges ): m_mask(0) {
 
-    // Convert input edge point to local internal mapping.
-    for (int i=0; i<edges.size(); i++)
-        m_edges.push_back(ExternalToInternal[edges[i]]);
+    if (edges.size() > 0) {        
 
-    // Sort points ascending.
-    sort (m_edges.begin(), m_edges.begin() + m_edges.size() );
+        for (int i=0; i<edges.size(); i++)
+            // Convert input edge points to local internal mapping.
+            m_edges.push_back(ExternalToInternal[edges[i]]);
+        
+        // Sort points ascending.
+        sort (m_edges.begin(), m_edges.begin() + m_edges.size() );
+
+        //Inserts input edge points into the same map of corner points.
+        addEdgePointsMap();
+    }
 
     //Insert eight default corner points into the map.
     addCornerPointsMap();
-    //Inserts input edge points into the same map of corner points.
-    addEdgePointsMap();
-
 }
 
 void Cube::resetCube() {
@@ -69,8 +72,13 @@ void Cube::deletePoint(int point)
 }
 
 void Cube::rotate(int axis, int rot) {
+
     if ((axis > -1) && (axis < 3)) {
-        // Get iter to edge points previously sets up.
+
+        //Mask of rotated edge points.
+        Uint mask = 0;
+        
+        // Get edge points iterator already configured in the constructor.
         vector<Uint>::iterator Iter = m_edges.begin();
 
         // Clean up all previous rotation
@@ -79,8 +87,9 @@ void Cube::rotate(int axis, int rot) {
         /// Gets a number of 90 degree steps.
         /// If negative rotation converts to similar positive rotation.
         int step = this->getRotationSteps(rot);
-        /// This cycle performs rotation in any of the tree axis.
-        // Rotates all points of the map (corner and edge points)
+
+        /// This loop rotates toward axis direction.
+        /// Rotates all points of the map (corner and edge points)
         for (PointMapIter it  = m_MapVertices.begin(); it != m_MapVertices.end(); 
                 ++it) {
             if      (axis == 0)
@@ -95,16 +104,25 @@ void Cube::rotate(int axis, int rot) {
             if (!m_edges.empty()) 
             {
                 if ( (*it).first == (*Iter) ) {
+                    
+                    // Shift a left value edge point times to build a mask.
+                    mask |=1<<InternalToExternal[(*it).second.getPoint()];
     
-                    // Puts into local vector the point number
-                    // It is just the result  of rotated edge points.
+                    // Puts into local vector the point number the result 
+                    // of rotated edge points.
                     m_rotated_edges.push_back((*it).second.getPoint());
                     ++Iter;
+                    
+                    //This display rotation of points.
+                    //cout << " " << (*it).first << "-->" << (*it).second.getPoint() << " ";
                 }
 
             }
 
         }
+        /// Save obtained mask in public variable.
+        if (mask)
+            m_mask = mask;
     }
 }
 
@@ -182,7 +200,7 @@ void Cube::addCornerPointsMap() {
 }
 
 void Cube::addEdgePointsMap() {
-    if (!m_edges.empty()) {
+    if ( m_edges.size() > 0 ) {
 
         for (vector<Uint>::iterator it  = m_edges.begin(); 
                 it != m_edges.end(); 

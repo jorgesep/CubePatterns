@@ -44,6 +44,16 @@ const PatternFactory::Element PatternFactory::elements [][MAX_ELEMENTS] = {
         { PYRAMID_POINTS, {2,3,7,6,11}            },
         { PYRAMID_POINTS, {4,5,6,7,11}            }
     },
+    {//Pattern4.1: 6 tetrahedra - 2 pyramid
+        { TETRA_POINTS,   {0,1,14,11}             },
+        { TETRA_POINTS,   {4,14,5,11}             },
+        { TETRA_POINTS,   {0,14,4,11}             },
+        { TETRA_POINTS,   {1,2,8,14}              },
+        { TETRA_POINTS,   {5,6,14,11}             },
+        { TETRA_POINTS,   {14,2,6,11}             },
+        { PYRAMID_POINTS, {2,3,7,6,11}            },
+        { PYRAMID_POINTS, {4,5,6,7,11}            }
+    },
     {//Pattern5: 12 tetrahedra
         { TETRA_POINTS,   {5,13,6,11}             },
         { TETRA_POINTS,   {2,6,13,11}             },
@@ -65,6 +75,15 @@ const PatternFactory::Element PatternFactory::elements [][MAX_ELEMENTS] = {
         { TETRA_POINTS,   {13,6,5,19}             },
         { PYRAMID_POINTS, {0,4,19,11,13}          },
         { PYRAMID_POINTS, {2,11,19,6,13}          },
+        { PRISM_POINTS,   {2,3,7,6,11,19}         }
+    },
+    {//Pattern6.1: 4 tetrahedra - 2 pyramid - 1 prism
+        { TETRA_POINTS,   {0,1,14,11}             },
+        { TETRA_POINTS,   {4,5,9,14}              },
+        { TETRA_POINTS,   {1,2,14,11}             },
+        { TETRA_POINTS,   {14,6,5,19}             },
+        { PYRAMID_POINTS, {0,4,19,11,14}          },
+        { PYRAMID_POINTS, {2,11,19,6,14}          },
         { PRISM_POINTS,   {2,3,7,6,11,19}         }
     },
     {//Pattern7: 5 tetrahedra - 3 pyramid
@@ -95,6 +114,13 @@ const PatternFactory::Element PatternFactory::elements [][MAX_ELEMENTS] = {
         { PYRAMID_POINTS, {1,11,19,5,12}          },
         { PRISM_POINTS,   {2,3,7,6,19,11}         },
         { PRISM_POINTS,   {1,11,19,5,2,6}         }
+    },
+    {//Pattern9.1: 2 tetrahedra - 1 pyramid - 2 prism
+        { TETRA_POINTS,   {2,3,11,15}             },
+        { TETRA_POINTS,   {6,7,15,19}             },
+        { PYRAMID_POINTS, {2,11,19,6,15}          },
+        { PRISM_POINTS,   {0,1,4,5,19,11}         },
+        { PRISM_POINTS,   {1,2,6,19,11}         }
     },
     {//Pattern10: 2 tetrahedra - 3 pyramid - 1 prism
         { TETRA_POINTS,   {4,5,19,8}              },

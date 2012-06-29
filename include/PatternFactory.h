@@ -33,7 +33,7 @@ static const Uint FACE_POINTS   =6;
 static const Uint TOTAL_POINTS  =27;
 static const Uint PERMUTATIONS  =30;
 static const Uint MAX_ELEMENTS  =20;
-static const Uint NUM_PATTERNS  =23;
+static const Uint NUM_PATTERNS  =26;
 
 
 class PatternFactory {
