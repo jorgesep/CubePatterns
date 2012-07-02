@@ -162,7 +162,7 @@ public:
      */
     CubePatterns(const UintVec&, const UintVec& );
 
-    virtual ~CubePatterns() { delete m_cube; };
+    virtual ~CubePatterns() { delete m_cube; factory->deleteInstance(); };
 
     /**
      * Rotates the cube to left or right position in one of the 
@@ -254,6 +254,8 @@ private:
      * Final outcome is a logical OR combination of all edge points in the pattern.
      */ 
     static const int PatternMask[];
+
+    PatternFactory *factory;
 
 };
 

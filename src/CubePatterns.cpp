@@ -50,34 +50,6 @@ const CubePatterns::Permutations_t CubePatterns::RotationMatrix[PERMUTATIONS] = 
     Permutations_t(Z,1)  /// Z --> 360
 };
 
-const int CubePatterns::PatternMask[NUM_PATTERNS] = {
-    2048,
-    526336,
-    133120,
-    10240,
-    18432,   // 11|14
-    272384,
-    534528,  // 11|13|19
-    542720,  // 11|14|19
-    6400,    // 8|11|12
-    657408,  // 11|17|19
-    530432,  // 11|12|19
-    559104,  // 11|15|19 
-    526592,  // 8|11|19
-    17340416,
-    657920,
-    550912,
-    38144,
-    538624,
-    17340928,
-    17340672,
-    300288,
-    17364992,
-    719360,
-    6144,
-    17342208,
-    20496128
-};
 
 CubePatterns::CubePatterns()  { 
 
@@ -85,6 +57,8 @@ CubePatterns::CubePatterns()  {
 
     // builds a map with default values of corner points (0,1,..7)
     createDefaultMapping(); 
+
+    factory = PatternFactory::instance();
 }
 
 CubePatterns::CubePatterns(const UintVec& nodes) {
@@ -92,6 +66,8 @@ CubePatterns::CubePatterns(const UintVec& nodes) {
     m_cube = new Cube();
     // makes map with values of input vector
     createNodesMapping(nodes);
+
+    factory = PatternFactory::instance();
 }
 
 CubePatterns::CubePatterns(const UintVec& nodes, const UintVec& edges) {
@@ -105,6 +81,8 @@ CubePatterns::CubePatterns(const UintVec& nodes, const UintVec& edges) {
         createNodesMapping(nodes);
         m_cube = new Cube();
     }
+
+    factory = PatternFactory::instance();
 }
 
 void CubePatterns::createDefaultMapping() {
@@ -177,22 +155,13 @@ void CubePatterns::search() {
         else if (axis ==Z) 
             m_cube->rotZ(step);
 
-        Uint mask = m_cube->getEdgePointsMask();
-        
-        for (int i=0; i< NUM_PATTERNS; i++) {
+        //Uint mask = m_cube->getEdgePointsMask();
 
-            if (mask == PatternMask[i]) {
-
-                PatternFactory *factory = new PatternFactory(i);
-                factory->createPattern(m_result);
-                delete factory;
-
-                break;
-            }
-        }
-        
-        if (m_result.size() > 0) 
+        //Check if rotated cube mask matchs to one the masks in factory.
+        if( factory->createPattern( m_cube->getEdgePointsMask() ) ){
+            factory->vectors(m_result);
             break;
+        }
     }
 }
 

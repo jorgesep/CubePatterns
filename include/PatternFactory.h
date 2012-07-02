@@ -38,22 +38,39 @@ static const Uint NUM_PATTERNS  =26;
 
 class PatternFactory {
 public:
-    struct Element {
+    
+    // Struct to contain points and size of one element.
+    struct item {
         Uint size;
         Uint points[CORNER_POINTS];
     };
 
-    PatternFactory():index(0) { };
-    PatternFactory(Uint i):index(i) { };
-    virtual ~PatternFactory() {};
-    virtual void createPattern(vector< vector<Uint> > & p);
+    // Struct contains one element and the mask its edge point associated.
+    struct Element {
+        Uint mask;
+        item items[MAX_ELEMENTS];
+    };
+
+    static PatternFactory *instance();
+    static void deleteInstance();
+
+    //virtual void createPattern(vector< vector<Uint> > & p);
+    bool createPattern(Uint);
+
+    void vectors(vector< vector<Uint> > & p ) { p = pattern; };
 private:
+    PatternFactory() { };
 
-    static const Element elements[][MAX_ELEMENTS];
+    virtual ~PatternFactory() { };
+    PatternFactory(const PatternFactory &) { };
+    PatternFactory& operator=(PatternFactory const&){ return *this; };
 
-    Uint index;
+    static const Element elements[];
 
-    static const bitset<27> Mask[2];
+    static PatternFactory* m_Instance;
+    static int m_NumInstances;
+
+    vector< vector<Uint> > pattern;
 
 };
 

@@ -48,7 +48,8 @@ int main (int argc, char *argv[])
     
         pattern->search();
     
-        pattern->vectors(result);
+        //pattern->vectors(result);
+        pattern->normal_vectors(result);
     
         print_out(nodes,edges,result);
     
@@ -90,9 +91,11 @@ void print_out(const vector<Uint>& cp,
             cout << endl;
         }
 
+        cout << endl;
+
     }
     else
-        cout << "Pattern not found !! " << endl;
+        cout << "Pattern not found !! " << endl << endl;
 }
 
 void read_file(string name) {
