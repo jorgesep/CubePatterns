@@ -116,24 +116,28 @@ void CubePatterns::createEdgesMapping(const UintVec& nodes, const UintVec& edges
     UintVecIt ite = edges.begin();
 
     int SIZE;
-    if ( nodes.size() > CORNER_POINTS)
+    if ( nodes.size() > CORNER_POINTS) {
+
         SIZE = nodes.size() - CORNER_POINTS;
-    else 
-        SIZE = nodes.size();
 
+        if ( edges.size() < SIZE )
+            SIZE = edges.size();
 
-    for ( ;itn != nodes.end(); ++itn) {
+        //for ( ;itn != nodes.end(); ++itn) {
+        for ( int i=0; i<SIZE; i++) {
 
-        // This map is a link of internal and external points
-        // The constructor was created with point 123 which is linked to 11
-        // Example: 11 --> (11,123)
-        m_NodesMap.insert( make_pair( *ite, CubeMapping_t(*ite, *itn) ) );
+            // This map is a link of internal and external points
+            // The constructor was created with point 123 which is linked to 11
+            // Example: 11 --> (11,123)
+            m_NodesMap.insert( make_pair( *ite, CubeMapping_t(*ite, *itn) ) );
 
-        //Keep a local copy of edge nodes.
-        m_localVector.push_back(*ite);
+            //Keep a local copy of edge nodes.
+            m_localVector.push_back(*ite);
 
-        ++ite;
+            ++ite;
+            ++itn;
 
+        }
     }
 }
 

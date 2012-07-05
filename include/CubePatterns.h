@@ -52,10 +52,13 @@ namespace patterns {
  *
  *
  * Example:
- * std::vector<int> cp // {0,1,2,4,5,6,7}
- * std::vector<int> edge //{17,12} 
- * cube = CubePatterns(cp,edge);
- * std::vector< std::vector<int> > results = cube.getPatternResults();
+ * std::vector<unsigned int> cp // {0,1,2,4,5,6,7}
+ * std::vector<unsigned int> edge //{17,12} 
+ * std::vector< std::vector<unsigned int> > result
+ *
+ * cube = new CubePatterns(cp,edge);
+ * cube->getPatternResults(result);
+ * delete cube;
  *
  */
 class CubePatterns {
