@@ -114,12 +114,14 @@ const PatternFactory::Element PatternFactory::elements [] = {
                 { PYRAMID_POINTS, {4,5,6,7,12}            } }
 
     },
-    {//Pattern8: 3 tetrahedra - 7 pyramid (Added centroid point) mask: 11|17|19
+    {//Pattern8: 6 tetrahedra - 6 pyramid (Added centroid point) mask: 11|17|19
          657408,{
                 { TETRA_POINTS,   {1,2,17,26}             },
                 { TETRA_POINTS,   {2,6,17,26}             },
-                { PYRAMID_POINTS, {1,1,7,5,26}            },
-                { PYRAMID_POINTS, {0,1,2,3,26}            },
+                { TETRA_POINTS,   {1,5,17,26}             },
+                { TETRA_POINTS,   {0,1,11,26}             },
+                { TETRA_POINTS,   {2,3,11,26}             },
+                { TETRA_POINTS,   {1,2,11,26}             },
                 { PYRAMID_POINTS, {3,7,19,11,26}          },
                 { PYRAMID_POINTS, {0,4,19,11,26}          },
                 { PYRAMID_POINTS, {0,1,5,4,26}            },
