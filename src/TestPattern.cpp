@@ -5,7 +5,7 @@
 #include <string>
 #include <cstring>
 #include <cstdlib>
-#include "CubePatterns.h"
+#include "TransitionTemplate.h"
 
 
 using namespace patterns;
@@ -44,9 +44,9 @@ int main (int argc, char *argv[])
 
         get_nodes(nodes,edges);
 
-        CubePatterns *pattern = new CubePatterns(nodes, edges);
+        TransitionTemplate *pattern = new TransitionTemplate(nodes, edges);
     
-        pattern->search();
+        pattern->findPattern();
     
         //pattern->vectors(result);
         pattern->normal_vectors(result);

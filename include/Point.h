@@ -150,7 +150,7 @@ public:
     /**
      * Returns point rotated.
      */
-    Uint getPoint() { return (Uint)m_point; }
+    Uint getRotatedPoint() { return (Uint)m_point; }
 
     int getX() { return m_X; };
     int getY() { return m_Y; };
@@ -159,7 +159,7 @@ public:
     /**
      * Returns initial point values, it has not changed despite of rotations.
      */
-    Uint getID() { return (Uint)m_id; };
+    Uint getInitPoint() { return (Uint)m_id; };
 
     void setX(int _x) { m_X = _x; };
     void setY(int _y) { m_Y = _y; };

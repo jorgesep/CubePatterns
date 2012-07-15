@@ -5,13 +5,13 @@
  *      Author: jsepulve
  */
 
-#include "CubePatterns.h"
+#include "TransitionTemplate.h"
 
 using namespace std;
 
 namespace patterns {
 
-const CubePatterns::Permutations_t CubePatterns::RotationMatrix[PERMUTATIONS] = {
+const TransitionTemplate::Permutations_t TransitionTemplate::RotationMatrix[PERMUTATIONS] = {
 
     Permutations_t(Z,1), /// Z --> 90  
     Permutations_t(Z,1), /// Z --> 180 
@@ -51,7 +51,7 @@ const CubePatterns::Permutations_t CubePatterns::RotationMatrix[PERMUTATIONS] = 
 };
 
 
-CubePatterns::CubePatterns()  { 
+TransitionTemplate::TransitionTemplate()  { 
 
     m_cube = new Cube();
 
@@ -61,7 +61,7 @@ CubePatterns::CubePatterns()  {
     factory = PatternFactory::instance();
 }
 
-CubePatterns::CubePatterns(const UintVec& nodes) {
+TransitionTemplate::TransitionTemplate(const UintVec& nodes) {
 
     m_cube = new Cube();
     // makes map with values of input vector
@@ -70,11 +70,13 @@ CubePatterns::CubePatterns(const UintVec& nodes) {
     factory = PatternFactory::instance();
 }
 
-CubePatterns::CubePatterns(const UintVec& nodes, const UintVec& edges) {
+TransitionTemplate::TransitionTemplate(const UintVec& nodes, const UintVec& edges) {
 
     if (edges.size() > 0 ) {
         // Creates a map with nodes and edge values.
         createEdgesMapping(nodes, edges);
+
+        // Create an instance of cube containing edge nodes
         m_cube = new Cube(m_localVector);
     }
     else {
@@ -85,7 +87,7 @@ CubePatterns::CubePatterns(const UintVec& nodes, const UintVec& edges) {
     factory = PatternFactory::instance();
 }
 
-void CubePatterns::createDefaultMapping() {
+void TransitionTemplate::createDefaultMapping() {
 
     for (Uint i=0; i<CORNER_POINTS; i++) 
         m_NodesMap.insert( make_pair( i, CubeMapping_t(i , i)) );
@@ -93,19 +95,21 @@ void CubePatterns::createDefaultMapping() {
 }
 
 /// Insert input vector into internal map.
-void CubePatterns::createNodesMapping(const UintVec& nodes) {
+void TransitionTemplate::createNodesMapping(const UintVec& nodes) {
 
     Uint SIZE = CORNER_POINTS;
     if (nodes.size() < SIZE)
         SIZE = nodes.size();
 
+    /// This map creates a link of first 8 internal number and external points
+    // 0 --> (0, 23)
     UintVecIt it = nodes.begin();
     for (Uint i=0; i< SIZE; i++)
         m_NodesMap.insert( make_pair( i, CubeMapping_t(i,*it++)) );
 }
 
 /// Insert the input vector of edge point into local vector.
-void CubePatterns::createEdgesMapping(const UintVec& nodes, const UintVec& edges) {
+void TransitionTemplate::createEdgesMapping(const UintVec& nodes, const UintVec& edges) {
 
     // insert first eight input nodes into an internal map.
     createNodesMapping(nodes);
@@ -129,20 +133,17 @@ void CubePatterns::createEdgesMapping(const UintVec& nodes, const UintVec& edges
             // This map is a link of internal and external points
             // The constructor was created with point 123 which is linked to 11
             // Example: 11 --> (11,123)
-            m_NodesMap.insert( make_pair( *ite, CubeMapping_t(*ite, *itn) ) );
+            m_NodesMap.insert( make_pair( *ite, CubeMapping_t( *ite, *(itn++) ) ) );
 
             //Keep a local copy of edge nodes.
-            m_localVector.push_back(*ite);
-
-            ++ite;
-            ++itn;
+            m_localVector.push_back( *(ite++) );
 
         }
     }
 }
 
 /// Rotate cube until find a pattern
-void CubePatterns::search() {
+bool TransitionTemplate::findPattern() {
 
     Coordinate axis;
     int step;
@@ -159,18 +160,18 @@ void CubePatterns::search() {
         else if (axis ==Z) 
             m_cube->rotZ(step);
 
-        //Uint mask = m_cube->getEdgePointsMask();
-
         //Check if rotated cube mask matchs to one the masks in factory.
         if( factory->createPattern( m_cube->getEdgePointsMask() ) ){
             factory->vectors(m_result);
-            break;
+            return true;
         }
     }
+
+    return false;
 }
 
 
-void CubePatterns::reset()
+void TransitionTemplate::reset()
 {
 
     if (m_NodesMap.size() > 0)
@@ -180,7 +181,7 @@ void CubePatterns::reset()
 }
 
 
-void CubePatterns::initialize()
+void TransitionTemplate::initialize()
 {
     if (m_localVector.size() > 0)
         m_localVector.clear();
@@ -191,11 +192,82 @@ void CubePatterns::initialize()
     }
 }
 
-void CubePatterns::vectors(VectorTable &v) {
+bool 
+TransitionTemplate::
+getNewElements(const UintVec &hex_idxs,
+        const UintVec & edge_idxs,
+        MeshPointVec & mesh_point,
+        MeshPointVec & tmp_pts,
+        VectorTable & new_element)
+{
+    Cube *cube;
+    bool insert_new_point = true;
+    m_NodesMap.clear();
+
+    if (edge_idxs.size() > 0 ) {
+        // Creates a map with nodes and edge values.
+        createEdgesMapping(hex_idxs, edge_idxs);
+
+        // Create an instance of cube containing edge nodes
+        cube = new Cube(m_localVector);
+    }
+    else {
+        createNodesMapping(hex_idxs);
+        cube = new Cube();
+    }
+
+    m_cube = cube;
+
+    if (findPattern()) {
+        // Determine mid point of this hexahedron
+        Point3D p1 = mesh_point[hex_idxs[0]].getPoint();
+        Point3D p2 = mesh_point[hex_idxs[6]].getPoint();
+        Point3D mp = (p2-p1);
+                mp /= 2;
+                mp+= p1;
+
+        //Assign number to new inserted point
+        Uint mid_idx = mesh_point.size() + tmp_pts.size();
+
+
+        UintMap points;
+        // Returns a map of (rotated,init point)
+        m_cube->getCurrentPoints(points);
+
+        // The found pattern is returned in m_result
+        for (VectorTableIt it=m_result.begin(); it != m_result.end(); ++it) {
+            // Temporay vector
+            UintVec temp_vector;
+            for (UintVecIt it1=(*it).begin() ; it1 != (*it).end(); ++it1) {
+                if (*it1 == 26 ) {
+                    temp_vector.push_back(mid_idx);
+                    if (insert_new_point) {
+                        //Insert new mid point
+                        tmp_pts.push_back(mp);
+                        insert_new_point = false;
+                    }
+                }
+                else {
+                    Uint internal = points.find(*it1)->second;
+                    temp_vector.push_back( m_NodesMap.find(internal)->second.External );
+                }
+            }
+
+            new_element.push_back(temp_vector);
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
+
+void TransitionTemplate::vectors(VectorTable &v) {
 
     UintMap points;
 
-    // Returns: rotated --> init point
+    // Returns a map of (rotated,init point)
     m_cube->getCurrentPoints(points);
 
     if(!m_result.empty()) {
@@ -213,7 +285,7 @@ void CubePatterns::vectors(VectorTable &v) {
     }
 }
 
-void CubePatterns::normal_vectors(VectorTable &v) {
+void TransitionTemplate::normal_vectors(VectorTable &v) {
 
     UintMap points;
 

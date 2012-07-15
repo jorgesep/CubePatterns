@@ -11,12 +11,14 @@
 #include <bitset>
 #include "Cube.h"
 #include "PatternFactory.h"
+#include "MeshPoint.h"
+#include "Point3D.h"
 
-
-#ifndef CUBEPATTERNS_H_
-#define CUBEPATTERNS_H_
+#ifndef TRANSITION_TEMPLATE_H_
+#define TRANSITION_TEMPLATE_H_
 
 using namespace std;
+using namespace Clobscode;
 
 /**
  * This is a base class for polyhedron
@@ -27,7 +29,7 @@ namespace patterns {
 
 
 /**
- * CubePatterns:
+ * TransitionTemplate:
  * Receives a vector of corner and edge hexahedron points as a input 
  * parameters, it classifies into a known pattern, splits up and returns a 
  * vector of regular polyhedra corner points vectors. These vectors are 
@@ -56,12 +58,12 @@ namespace patterns {
  * std::vector<unsigned int> edge //{17,12} 
  * std::vector< std::vector<unsigned int> > result
  *
- * cube = new CubePatterns(cp,edge);
+ * cube = new TransitionTemplate(cp,edge);
  * cube->getPatternResults(result);
  * delete cube;
  *
  */
-class CubePatterns {
+class TransitionTemplate {
 
 public:
     typedef map<Uint, Uint>         UintMap;
@@ -72,6 +74,9 @@ public:
 
     typedef vector< UintVec >       VectorTable;
     typedef VectorTable::iterator   VectorTableIt;
+
+    typedef vector<MeshPoint> MeshPointVec;
+
     
     enum Coordinate { X, Y, Z };
 
@@ -148,14 +153,14 @@ public:
      * Default constructor.
      * Creates a default eight corner point cube.
      */
-    CubePatterns();
+    TransitionTemplate();
 
     /**
      * Cube parametric constructor.
      * Takes first eight number as corner points, the other input number are
      * not considered.
      */
-    CubePatterns( const UintVec& );
+    TransitionTemplate( const UintVec& );
 
     /**
      * Cube parametric constructor.
@@ -163,9 +168,9 @@ public:
      * as edge points. 
      * The second vector is the mapping of edge points to internal convention.
      */
-    CubePatterns(const UintVec&, const UintVec& );
+    TransitionTemplate(const UintVec&, const UintVec& );
 
-    virtual ~CubePatterns() { delete m_cube; factory->deleteInstance(); };
+    virtual ~TransitionTemplate() { delete m_cube; factory->deleteInstance(); };
 
     /**
      * Rotates the cube to left or right position in one of the 
@@ -187,7 +192,7 @@ public:
      *
      * Saves the pattern found in a vector of integer vectors.
      */
-    void search();
+    bool findPattern();
 
     /**
      * Reset both nodes map and local vector.
@@ -200,6 +205,13 @@ public:
     //void vectors(VectorTable &v) { v = m_result; }; 
     void vectors(VectorTable &); 
     void normal_vectors(VectorTable &); 
+
+    bool getNewElements(VectorTable &);
+    bool getNewElements(const UintVec&, 
+            const UintVec&, 
+            MeshPointVec &, 
+            MeshPointVec&, 
+            VectorTable&); 
 
 private:
 
@@ -266,4 +278,4 @@ private:
 
 }
 
-#endif /* CUBEPATTERNS_H_ */
+#endif /* TRANSITION_TEMPLATE_H_ */

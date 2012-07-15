@@ -62,8 +62,8 @@ void Cube::resetCube() {
 void Cube::addNewPoint(int point) {
     Point tmpPoint = Point(point);
 
-    if (m_MapVertices.find(tmpPoint.getID()) == m_MapVertices.end())
-        m_MapVertices.insert(std::make_pair(tmpPoint.getID(), tmpPoint));
+    if (m_MapVertices.find(tmpPoint.getInitPoint()) == m_MapVertices.end())
+        m_MapVertices.insert(std::make_pair(tmpPoint.getInitPoint(), tmpPoint));
 }
 
 void Cube::deletePoint(int point)
@@ -106,15 +106,15 @@ void Cube::rotate(int axis, int rot) {
                 if ( (*it).first == (*Iter) ) {
                     
                     // Shift a left value edge point times to build a mask.
-                    mask |=1<<InternalToExternal[(*it).second.getPoint()];
+                    mask |=1<<InternalToExternal[(*it).second.getRotatedPoint()];
     
                     // Puts into local vector the point number the result 
                     // of rotated edge points.
-                    m_rotated_edges.push_back((*it).second.getPoint());
+                    m_rotated_edges.push_back((*it).second.getRotatedPoint());
                     ++Iter;
                     
                     //This display rotation of points.
-                    //cout << " " << (*it).first << "-->" << (*it).second.getPoint() << " ";
+                    //cout << " " << (*it).first << "-->" << (*it).second.getRotatedPoint() << " ";
                 }
 
             }
@@ -155,7 +155,7 @@ void Cube::getCurrentPoints(vector<Uint> & nodes) {
     for (PointMapIter it  = m_MapVertices.begin(); 
             it != m_MapVertices.end(); 
             ++it) {
-        nodes.push_back( InternalToExternal[(*it).second.getPoint()] );
+        nodes.push_back( InternalToExternal[(*it).second.getRotatedPoint()] );
     }
 }
 
@@ -165,8 +165,8 @@ void Cube::getCurrentPoints(map<Uint, Uint> & nodes) {
     for (PointMapIter it  = m_MapVertices.begin(); 
             it != m_MapVertices.end(); 
             ++it) {
-        nodes.insert( make_pair(InternalToExternal[(*it).second.getPoint()],
-                                InternalToExternal[(*it).second.getID()]));
+        nodes.insert( make_pair(InternalToExternal[(*it).second.getRotatedPoint()],
+                                InternalToExternal[(*it).second.getInitPoint()]));
     }
 }
 
@@ -205,7 +205,7 @@ void Cube::addEdgePointsMap() {
         for (vector<Uint>::iterator it  = m_edges.begin(); 
                 it != m_edges.end(); 
                 ++it) 
-            m_MapVertices.insert(std::make_pair( Point(*it).getID(), Point(*it)));
+            m_MapVertices.insert(std::make_pair( Point(*it).getInitPoint(), Point(*it)));
     }
 
 }
