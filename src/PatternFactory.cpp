@@ -257,7 +257,7 @@ const PatternFactory::Element PatternFactory::elements [] = {
                 { PYRAMID_POINTS, {2,10,18,6,26}          },
                 { PYRAMID_POINTS, {1,8,10,2,26}           },
                 { PYRAMID_POINTS, {1,2,6,5,26}            },
-                { PRISM_POINTS,   {8,10,3,0,12,9}         } }
+                { PRISM_POINTS,   {0,8,10,3,15,12}         } }
 
     },
     {//Pattern19: 3 tetrahedra - 4 pyramid - 2 pris mask: 11|12|13|14|15|19|24

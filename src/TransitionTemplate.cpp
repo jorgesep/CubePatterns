@@ -202,6 +202,7 @@ getNewElements(const UintVec &hex_idxs,
 {
     Cube *cube;
     bool insert_new_point = true;
+    Uint mid_idx;
     m_NodesMap.clear();
 
     if (edge_idxs.size() > 0 ) {
@@ -226,10 +227,6 @@ getNewElements(const UintVec &hex_idxs,
                 mp /= 2;
                 mp+= p1;
 
-        //Assign number to new inserted point
-        Uint mid_idx = mesh_point.size() + tmp_pts.size();
-
-
         UintMap points;
         // Returns a map of (rotated,init point)
         m_cube->getCurrentPoints(points);
@@ -240,12 +237,15 @@ getNewElements(const UintVec &hex_idxs,
             UintVec temp_vector;
             for (UintVecIt it1=(*it).begin() ; it1 != (*it).end(); ++it1) {
                 if (*it1 == 26 ) {
-                    temp_vector.push_back(mid_idx);
                     if (insert_new_point) {
                         //Insert new mid point
                         tmp_pts.push_back(mp);
                         insert_new_point = false;
+
+                        //Assign number to new inserted point
+                        mid_idx = mesh_point.size() + tmp_pts.size();
                     }
+                    temp_vector.push_back(mid_idx);
                 }
                 else {
                     Uint internal = points.find(*it1)->second;

@@ -29,6 +29,11 @@ ADD_EXECUTABLE (TestPattern TestPattern)
 TARGET_LINK_LIBRARIES (TestPattern TransitionTemplate)
 set_property(TARGET TestPattern PROPERTY RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/../bin)
 
+ADD_EXECUTABLE (TestTemplate TestTemplate)
+TARGET_LINK_LIBRARIES (TestTemplate TransitionTemplate)
+set_property(TARGET TestTemplate PROPERTY RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/../bin)
+
+
 
 #delete bin files in make clean
 SET_DIRECTORY_PROPERTIES (
