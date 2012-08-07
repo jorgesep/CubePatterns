@@ -28,7 +28,7 @@ const PatternFactory::Element PatternFactory::elements [] = {
         526336, {
                 { PRISM_POINTS,   {0,1,4,5,11,19}         },
                 { PRISM_POINTS,   {1,2,6,5,11,19}         },
-                { PRISM_POINTS,   {2,3,7,4,11,19}         } }
+                { PRISM_POINTS,   {2,3,7,6,11,19}         } }
     },   
     {   //Pattern3: 6 tetrahedra - 2 pyramid  mask: 11|17  
         133120, {
@@ -46,7 +46,7 @@ const PatternFactory::Element PatternFactory::elements [] = {
                 { TETRA_POINTS,   {0,1,13,11}             },
                 { TETRA_POINTS,   {4,13,5,11}             },
                 { TETRA_POINTS,   {0,13,4,11}             },
-                { TETRA_POINTS,   {1,2,8,13}              },
+                { TETRA_POINTS,   {1,2,11,13}              },
                 { TETRA_POINTS,   {5,6,13,11}             },
                 { TETRA_POINTS,   {13,2,6,11}             },
                 { PYRAMID_POINTS, {2,3,7,6,11}            },
@@ -66,24 +66,24 @@ const PatternFactory::Element PatternFactory::elements [] = {
     },
     {//Pattern5: 12 tetrahedra mask:11|13|18
          272384,{
-                { TETRA_POINTS,   {5,13,6,11}             },
-                { TETRA_POINTS,   {2,6,13,11}             },
-                { TETRA_POINTS,   {5,6,18,11}             },
                 { TETRA_POINTS,   {0,1,13,11}             },
-                { TETRA_POINTS,   {4,18,5,11}             },
-                { TETRA_POINTS,   {0,18,4,11}             },
+                { TETRA_POINTS,   {4,13,5,11}             },
+                { TETRA_POINTS,   {0,13,4,11}             },
                 { TETRA_POINTS,   {3,18,7,11}             },
                 { TETRA_POINTS,   {4,18,7,11}             },
                 { TETRA_POINTS,   {4,5,18,11}             },
                 { TETRA_POINTS,   {2,6,18,11}             },
                 { TETRA_POINTS,   {2,3,18,11}             },
-                { TETRA_POINTS,   {18,1,2,11}             } }
+                { TETRA_POINTS,   {13,1,2,11}             },
+                { TETRA_POINTS,   {5,13,6,11}             },
+                { TETRA_POINTS,   {2,6,13,11}             },
+                { TETRA_POINTS,   {5,6,18,11}             } }
 
     },
     {//Pattern6: 4 tetrahedra - 2 pyramid - 1 prism  mask: 11|13|19
          534528,{
                 { TETRA_POINTS,   {0,1,13,11}             },
-                { TETRA_POINTS,   {4,5,9,13}              },
+                { TETRA_POINTS,   {4,5,19,13}              },
                 { TETRA_POINTS,   {1,2,13,11}             },
                 { TETRA_POINTS,   {13,6,5,19}             },
                 { PYRAMID_POINTS, {0,4,19,11,13}          },
@@ -225,7 +225,7 @@ const PatternFactory::Element PatternFactory::elements [] = {
                 { TETRA_POINTS,   {5,9,6,24}              },
                 { PYRAMID_POINTS, {15,7,19,24,6}          },
                 { PYRAMID_POINTS, {4,19,24,12,5}          },
-                { PYRAMID_POINTS, {0,11,12,1,5}           },
+                { PYRAMID_POINTS, {0,11,9,1,5}           },
                 { PYRAMID_POINTS, {2,15,24,9,6}           },
                 { PRISM_POINTS,   {12,0,11,24,1,9}        },
                 { PRISM_POINTS,   {3,15,24,11,2,9}        } }
@@ -262,22 +262,25 @@ const PatternFactory::Element PatternFactory::elements [] = {
     },
     {//Pattern19: 3 tetrahedra - 4 pyramid - 2 pris mask: 11|12|13|14|15|19|24
          17357312,{
-                { TETRA_POINTS,   {9,14,5,24}             },
-                { TETRA_POINTS,   {1,24,2,11}             },
-                { TETRA_POINTS,   {9,2,14,24}             },
-                { PYRAMID_POINTS, {12,24,19,4,5}          },
-                { PYRAMID_POINTS, {0,11,24,12,1}          },
-                { PYRAMID_POINTS, {1,9,24,12,5}           },
-                { PYRAMID_POINTS, {14,24,19,6,5}          },
-                { PRISM_POINTS,   {14,15,7,6,19,24}       },
-                { PRISM_POINTS,   {2,3,15,14,24,11}       } }
+                { TETRA_POINTS,   {2,9,14,26}            },
+                { TETRA_POINTS,   {9,12,24,26}           },
+                { TETRA_POINTS,   {5,12,14,24}           },
+                { TETRA_POINTS,   {1,5,9,12}             },
+                { TETRA_POINTS,   {5,9,12,14}            },
+                { PYRAMID_POINTS, {2,3,15,14,26}         },
+                { PYRAMID_POINTS, {2,3,11,9,26}          },
+                { PYRAMID_POINTS, {3,15,24,11,26}        },
+                { PYRAMID_POINTS, {12,24,19,4,5}         },
+                { PYRAMID_POINTS, {24,14,6,19,5}         },
+                { PRISM_POINTS,   {6,14,15,7,19,24}      },
+                { PRISM_POINTS,   {0,1,9,11,12,24}     } }
 
     },
     {//Pattern20: 6 prism mask: 9|11|12|13|14|15|17|19
          17364992,{
                 { PRISM_POINTS,   {0,11,24,12,13,1}       },
                 { PRISM_POINTS,   {3,15,24,11,2,14}       },
-                { PRISM_POINTS,   {12,15,7,6,19,24}       },
+                { PRISM_POINTS,   {14,15,7,6,19,24}       },
                 { PRISM_POINTS,   {4,5,13,12,24,19}       },
                 { PRISM_POINTS,   {1,2,14,13,11,24}       },
                 { PRISM_POINTS,   {5,13,14,6,19,24}       } }
@@ -311,8 +314,8 @@ const PatternFactory::Element PatternFactory::elements [] = {
                 { PYRAMID_POINTS, {1,8,20,9,5}            },
                 { PYRAMID_POINTS, {9,2,10,20,6}           },
                 { PRISM_POINTS,   {0,8,20,11,12,24}       },
-                { PRISM_POINTS,   {20,10,3,11,24,13}      },
-                { PRISM_POINTS,   {8,10,13,12,6,5}        } }
+                { PRISM_POINTS,   {20,10,3,11,24,15}      },
+                { PRISM_POINTS,   {8,10,15,12,6,5}        } }
 
     },
     {//Pattern24: 3 tetrahedra - 9 pyramid - 3 prism (Added centroid point)
@@ -320,9 +323,6 @@ const PatternFactory::Element PatternFactory::elements [] = {
                 { TETRA_POINTS,   {6,20,24,26}            },
                 { TETRA_POINTS,   {6,20,21,26}            },
                 { TETRA_POINTS,   {6,21,24,26}            },
-                { PRISM_POINTS,   {8,1,9,20,21,13}        },
-                { PRISM_POINTS,   {21,24,19,16,4,12}      },
-                { PRISM_POINTS,   {20,10,3,11,15,24}      },
                 { PYRAMID_POINTS, {9,20,10,2,6}           },
                 { PYRAMID_POINTS, {9,20,21,13,6}          },
                 { PYRAMID_POINTS, {5,16,21,13,6}          },
@@ -331,7 +331,10 @@ const PatternFactory::Element PatternFactory::elements [] = {
                 { PYRAMID_POINTS, {21,24,19,16,6}         },
                 { PYRAMID_POINTS, {0,8,20,11,26}          },
                 { PYRAMID_POINTS, {0,8,21,12,26}          },
-                { PYRAMID_POINTS, {0,11,24,12,26}         } }
+                { PYRAMID_POINTS, {0,11,24,12,26}         },
+                { PRISM_POINTS,   {8,1,9,20,21,13}        },
+                { PRISM_POINTS,   {21,24,19,16,4,12}      },
+                { PRISM_POINTS,   {20,10,3,11,15,24}      } }
     }
 };
 
