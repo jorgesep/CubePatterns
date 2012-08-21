@@ -7,9 +7,10 @@ set (Patterns_VERSION_MINOR 0)
 
 # add the binary tree to the search path for include files
 # so that we will find PatternsConfig.h
+set (MESHER "${PROJECT_BINARY_DIR}/../..")
 include_directories("${PROJECT_BINARY_DIR}")
 include_directories("${PROJECT_BINARY_DIR}/../include")
-include_directories("${PROJECT_BINARY_DIR}/../mesher")
+include_directories("${MESHER}")
 
 #delete generated files  
 SET_DIRECTORY_PROPERTIES (
@@ -41,8 +42,7 @@ SET_DIRECTORY_PROPERTIES (
       ADDITIONAL_MAKE_CLEAN_FILES "${PROJECT_SOURCE_DIR}/../bin/*"
 )
 
-ADD_LIBRARY(TransitionTemplate SHARED Point Cube PatternFactory TransitionTemplate ../mesher/MeshPoint ../mesher/Point3D)
-
+ADD_LIBRARY(TransitionTemplate Point Cube PatternFactory TransitionTemplate ${MESHER}/MeshPoint ${MESHER}/Point3D)
 set_property(TARGET TransitionTemplate PROPERTY LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/../lib)
 
 
