@@ -103,7 +103,7 @@ void Cube::rotate(int axis, int rot) {
             
             if (!m_edges.empty()) 
             {
-                if ( (*it).first == (*Iter) ) {
+                if ( (*it).first == (*Iter) && (Iter != m_edges.end()) ) {
                     
                     // Shift a left value edge point times to build a mask.
                     mask |=1<<InternalToExternal[(*it).second.getRotatedPoint()];
@@ -224,5 +224,25 @@ int Cube::getRotationSteps(int rotation) {
 
     return step;
 }
+
+
+string Cube::reportRotation() {
+    stringstream report ;
+    
+    report << "|SIZE: "<< m_edges.size() << " NODES:";
+    
+    for (vector<Uint>::iterator it = m_edges.begin(); it != m_edges.end(); ++it)
+        report << " " << InternalToExternal[(*it)] ;
+    
+    for (PointMapIter it  = m_MapVertices.begin(); 
+            it != m_MapVertices.end(); 
+            ++it) {
+        report << "| " << InternalToExternal[(*it).second.getInitPoint()] << 
+            "-->" << InternalToExternal[(*it).second.getRotatedPoint()] ;
+    }
+    return report.str();
+}
+
+
 
 }

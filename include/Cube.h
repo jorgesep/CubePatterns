@@ -11,6 +11,7 @@
 #include <vector>
 #include <map>
 #include <iostream>
+#include <sstream>
 #include "Point.h"
 
 using namespace std;
@@ -138,6 +139,11 @@ public:
      * Return mask of edge points
      */
     Uint getEdgePointsMask() { return m_mask; };
+
+    /**
+     * Return a string with node rotations performed.
+     */
+    string reportRotation();
 
 private:
     /**

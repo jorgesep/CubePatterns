@@ -53,16 +53,16 @@ const PatternFactory::Element PatternFactory::elements [] = {
                 { PYRAMID_POINTS, {4,5,6,7,11}            } }
 
     },
-    {//Pattern4.1: 6 tetrahedra - 2 pyramid    11|14 ERROR
+    {//Pattern4.1 (Jorge): 6 tetrahedra - 2 pyramid    11|14 ARREGLADO
          18432, {
-                { TETRA_POINTS,   {0,1,14,11}             },
-                { TETRA_POINTS,   {4,14,5,11}             },
-                { TETRA_POINTS,   {0,14,4,11}             },
-                { TETRA_POINTS,   {1,2,8,14}              },
-                { TETRA_POINTS,   {5,6,14,11}             },
-                { TETRA_POINTS,   {14,2,6,11}             },
-                { PYRAMID_POINTS, {2,3,7,6,11}            },
-                { PYRAMID_POINTS, {4,5,6,7,11}            } }
+                { TETRA_POINTS,    {11,1,14,5  }          },
+                { TETRA_POINTS,    {11,1,2,14  }          },
+                { TETRA_POINTS,    {11,5,14,6  }          },
+                { TETRA_POINTS,    {11,2,3,14  }          },
+                { TETRA_POINTS,    {11,14,3,7  }          },
+                { TETRA_POINTS,    {11,6,14,7  }          },
+                { PYRAMID_POINTS,  {4,5,1,0,11 }          },
+                { PYRAMID_POINTS,  {5,4,7,6,11 }          }  }
     },
     {//Pattern5: 12 tetrahedra mask:11|13|18
          272384,{
@@ -344,7 +344,7 @@ const PatternFactory::Element PatternFactory::elements [] = {
                 { PRISM_POINTS,   {15,3,10,24,11,20}      }} 
     },
     {//Pattern24 (Jorge): 12 tetrahedra - 12 pyramid (Added centroid point) MODIFICADO
-         20496128, {
+         20561664, {
                 { TETRA_POINTS,   {16,19,6,26   }         }, 
                 { TETRA_POINTS,   {4,26,19,16   }         }, 
                 { TETRA_POINTS,   {1,13,9,26    }         }, 
@@ -369,6 +369,17 @@ const PatternFactory::Element PatternFactory::elements [] = {
                 { PYRAMID_POINTS, {24,11,3,15,26}         },  
                 { PYRAMID_POINTS, {19,24,15,7,26}         },  
                 { PYRAMID_POINTS, {20,9,2,10,26 }         }  } 
+    },
+    {//Pattern25 (Jorge): 2 hexa - 5 prism NUEVO
+         28179712, {
+         { PRISM_POINTS,   {3,10,11,15,23,24      }             },
+         { PRISM_POINTS,   {15,23,24,7,18,19      }             },
+         { PRISM_POINTS,   {0,8,11,12,21,24       }             },
+         { PRISM_POINTS,   {12,21,24,4,16,19      }             },
+         { PRISM_POINTS,   {11,8,10,24,21,23      }             },
+         { PRISM_POINTS,   {24,21,23,19,16,18     }             },
+         { HEXA_POINTS,    {21,13,14,23,16,5,6,18 }             },
+         { HEXA_POINTS,    {8,1,2,10,21,13,14,23  }             }}
     }
 };
 

@@ -7,12 +7,13 @@
 
 #include <iostream>
 #include <vector>
+#include <list>
 #include <map>
 #include <bitset>
 #include "Cube.h"
 #include "PatternFactory.h"
-#include "MeshPoint.h"
-#include "Point3D.h"
+#include "../../MeshPoint.h"
+#include "../../Point3D.h"
 
 #ifndef TRANSITION_TEMPLATE_H_
 #define TRANSITION_TEMPLATE_H_
@@ -76,6 +77,9 @@ public:
     typedef VectorTable::iterator   VectorTableIt;
 
     typedef vector<MeshPoint> MeshPointVec;
+	
+	typedef list<Point3D>			Point3DList;
+	typedef Point3DList::iterator	Point3DIt;
 
     
     enum Coordinate { X, Y, Z };
@@ -210,7 +214,7 @@ public:
     bool getNewElements(const UintVec&, 
             const UintVec&, 
             MeshPointVec &, 
-            MeshPointVec&, 
+            Point3DList&, 
             VectorTable&); 
 
 private:

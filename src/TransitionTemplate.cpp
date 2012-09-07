@@ -167,6 +167,9 @@ bool TransitionTemplate::findPattern() {
         }
     }
 
+    // Just for debugging
+    //cout << "PATRON NO ENCONTRADO " << m_cube->reportRotation() << endl;
+
     return false;
 }
 
@@ -192,14 +195,11 @@ void TransitionTemplate::initialize()
     }
 }
 
-bool 
-TransitionTemplate::
-getNewElements(const UintVec &hex_idxs,
-        const UintVec & edge_idxs,
-        MeshPointVec & mesh_point,
-        MeshPointVec & tmp_pts,
-        VectorTable & new_element)
-{
+bool TransitionTemplate::getNewElements(const UintVec &hex_idxs,
+										const UintVec & edge_idxs,
+										MeshPointVec & mesh_point,
+										Point3DList & tmp_pts,
+										VectorTable & new_element){
     Cube *cube;
     bool insert_new_point = true;
     Uint mid_idx;
@@ -258,6 +258,7 @@ getNewElements(const UintVec &hex_idxs,
 
         return true;
     }
+
 
     return false;
 }
