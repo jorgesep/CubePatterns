@@ -37,7 +37,8 @@ int main (int argc, char *argv[])
     }
 
     vector<MeshPoint> mesh_points;
-    vector<MeshPoint> tmp_pts;
+    //vector<MeshPoint> tmp_pts;
+	list<Point3D> tmp_pts;
     create_mesh_point(mesh_points);
 
     cout << "MESHPOINT SIZE: "<< mesh_points.size() << endl;
@@ -184,15 +185,25 @@ void get_nodes(vector<Uint> & _cp, vector<Uint> & _ep) {
 void create_mesh_point(vector<MeshPoint>& mesh) 
 {
 
-    Point3D point;
-    MeshPoint mp;
+    //Point3D point;
+    //MeshPoint mp;
 
 
     for (int j=0; j<10; j++) {
     // 10 hexahedro along x 
     for (int i=0; i<10; i++) {
-        point = Point3D(i*2,j*2,0);
-        mp = MeshPoint(point);
+		mesh.push_back(MeshPoint (Point3D (i*2,j*2,0),0));
+		mesh.push_back(MeshPoint (Point3D (i*2,j*2,2),0));
+		mesh.push_back(MeshPoint (Point3D (i*2,j*2,0),0));
+		mesh.push_back(MeshPoint (Point3D (i*2,j*2,2),0));
+		
+		mesh.push_back(MeshPoint (Point3D (i*2+2,j*2+2,0),0));
+		mesh.push_back(MeshPoint (Point3D (i*2+2,j*2+2,2),0));
+		mesh.push_back(MeshPoint (Point3D (i*2+2,j*2+2,0),0));
+		mesh.push_back(MeshPoint (Point3D (i*2+2,j*2+2,2),0));
+		
+        /*point = Point3D(i*2,j*2,0);
+        MeshPoint mp (point,0);
         mesh.push_back(mp);
         point = Point3D(i*2,j*2,2);
         mp = MeshPoint(point);
@@ -202,9 +213,9 @@ void create_mesh_point(vector<MeshPoint>& mesh)
         mesh.push_back(mp);
         point = Point3D(i*2,j*2,2);
         mp = MeshPoint(point);
-        mesh.push_back(mp);
+        mesh.push_back(mp);*/
 
-        point = Point3D(i*2+2,j*2+2,0);
+        /*point = Point3D(i*2+2,j*2+2,0);
         mp = MeshPoint(point);
         mesh.push_back(mp);
         point = Point3D(i*2+2,j*2+2,2);
@@ -215,7 +226,7 @@ void create_mesh_point(vector<MeshPoint>& mesh)
         mesh.push_back(mp);
         point = Point3D(i*2+2,j*2+2,2);
         mp = MeshPoint(point);
-        mesh.push_back(mp);
+        mesh.push_back(mp);*/
     }
     }
    
